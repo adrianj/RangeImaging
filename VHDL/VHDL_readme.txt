@@ -1,0 +1,2 @@
+This folder contains VHDL code.
+I have tried to keep code specific to a project seperate from code that is generic to all projects (eg, Seven Segment Display controller) and FPGA vendor specific code (eg, Altera blockRam entities).

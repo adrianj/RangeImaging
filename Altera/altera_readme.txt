@@ -1,0 +1,1 @@
+This folder contains Altera Quartus Project files, and TCL scripts to be run within the Quartus projects (with various settings, eg pin assignments).
