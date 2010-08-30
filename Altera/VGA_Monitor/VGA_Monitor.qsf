@@ -121,8 +121,6 @@ set_location_assignment PIN_AH1 -to VGA_HS
 # Classic Timing Assignments
 # ==========================
 set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.1V
-set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS ON
-set_global_assignment -name TIMEQUEST_DO_CCPP_REMOVAL ON
 
 # Analysis & Synthesis Assignments
 # ================================

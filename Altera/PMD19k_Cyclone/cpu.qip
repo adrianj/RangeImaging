@@ -1,0 +1,5 @@
+set_global_assignment -name VHDL_FILE [file join $::quartus(qip_path) D:/sync/PhD/RangeImaging/Altera/TCL_Scripts/nios_slave_16.vhd]
+set_global_assignment -name SDC_FILE [file join $::quartus(qip_path) ranger_cpu.sdc]
+set_global_assignment -name TCL_FILE [file join $::quartus(qip_path) D:/sync/PhD/RangeImaging/Altera/TCL_Scripts/nios_slave_16_hw.tcl]
+set_global_assignment -name SDC_FILE [file join $::quartus(qip_path) pll.sdc]
+set_global_assignment -name SDC_FILE [file join $::quartus(qip_path) D:/programs/altera80/ip/sopc_builder_ip/altera_avalon_clock_adapter/altera_avalon_clock_adapter.sdc]
