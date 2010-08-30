@@ -16,7 +16,7 @@ Also - here are some reminders to myself about how to use Git:
 
 git add <file> : Adds files to repositories. Be careful when adding directories, since it adds all files in the directory. Better to go into the directory and add only files with matching patterns, eg, "git add *.vhd"
 
-git commit -a -m "message" : Commits changes to all modified files.
+git commit -a -m "message" : Commits changes to all modified files. Without the -m "message" it opens up VIM asking for a message. Quitting is not intuitive - type "<esc> :wq" to save and quit. There must surely be an easier way!!
 
 git push : pushes commited changes to github.
 
