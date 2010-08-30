@@ -90,7 +90,7 @@ begin  -- rtl
           dm_ready <= sfr_dout(2);
         end if;
       else
-        if tx_fifo_we = '0' and tx_fifo_full = '0' and fifo_count(1 downto 0) = "00" then
+        if tx_fifo_we = '0' and tx_fifo_full = '0' and fifo_count(3 downto 0) = "0000" then
           tx_fifo_we  <= '1';
           tx_fifo_din <= tx_fifo_din + 1;
         elsif tx_fifo_we = '1' then
