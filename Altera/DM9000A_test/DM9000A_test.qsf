@@ -23,30 +23,178 @@
 # and any changes you make may be lost or overwritten.
 
 
-set_global_assignment -name FAMILY "Stratix III"
-set_global_assignment -name DEVICE EP3SL150F1152C2
-set_global_assignment -name TOP_LEVEL_ENTITY DM9000A_test
+
+# Project-Wide Assignments
+# ========================
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 8.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "11:52:59  AUGUST 28, 2010"
 set_global_assignment -name LAST_QUARTUS_VERSION 8.0
-set_global_assignment -name EDA_SIMULATION_TOOL "Custom VHDL"
-set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
-set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
-set_global_assignment -name USE_GENERATED_PHYSICAL_CONSTRAINTS OFF -section_id eda_palace
-set_global_assignment -name SEARCH_PATH "d:\\sync\\phd\\altera_s3\\tcl_scripts/"
+
+# Classic Timing Assignments
+# ==========================
+set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.1V
+set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS ON
+set_global_assignment -name TIMEQUEST_DO_CCPP_REMOVAL ON
+
+# Analysis & Synthesis Assignments
+# ================================
+set_global_assignment -name FAMILY "Stratix III"
+set_global_assignment -name TOP_LEVEL_ENTITY DM9000A_test
 set_global_assignment -name STRATIXII_OPTIMIZATION_TECHNIQUE SPEED
 set_global_assignment -name DEVICE_FILTER_PACKAGE FBGA
 set_global_assignment -name DEVICE_FILTER_PIN_COUNT 1152
 set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 2
-set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.1V
+
+# Fitter Assignments
+# ==================
+set_global_assignment -name DEVICE EP3SL150F1152C2
+
+# EDA Netlist Writer Assignments
+# ==============================
+set_global_assignment -name EDA_SIMULATION_TOOL "Custom VHDL"
+
+# Advanced I/O Timing Assignments
+# ===============================
 set_global_assignment -name ENABLE_ADVANCED_IO_TIMING ON
-set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS ON
-set_global_assignment -name TIMEQUEST_DO_CCPP_REMOVAL ON
-set_global_assignment -name VHDL_FILE ../../VHDL/DM9000A_Ethernet/pllx4d5.vhd
-set_global_assignment -name VHDL_FILE ../../VHDL/DM9000A_Ethernet/DM9000A_Ethernet.vhd
-set_global_assignment -name VHDL_FILE ../../VHDL/DM9000A_Ethernet/DM9000A_test.vhd
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
-set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
-set_global_assignment -name PARTITION_COLOR 14622752 -section_id Top
-set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
-set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+
+# start EDA_TOOL_SETTINGS(eda_simulation)
+# ---------------------------------------
+
+	# EDA Netlist Writer Assignments
+	# ==============================
+	set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
+	set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
+
+# end EDA_TOOL_SETTINGS(eda_simulation)
+# -------------------------------------
+
+# start EDA_TOOL_SETTINGS(eda_palace)
+# -----------------------------------
+
+	# Analysis & Synthesis Assignments
+	# ================================
+	set_global_assignment -name USE_GENERATED_PHYSICAL_CONSTRAINTS OFF -section_id eda_palace
+
+# end EDA_TOOL_SETTINGS(eda_palace)
+# ---------------------------------
+
+# --------------------------
+# start ENTITY(DM9000A_test)
+
+	# start LOGICLOCK_REGION(Root Region)
+	# -----------------------------------
+
+		# LogicLock Region Assignments
+		# ============================
+		set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+		set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+
+	# end LOGICLOCK_REGION(Root Region)
+	# ---------------------------------
+
+	# start DESIGN_PARTITION(Top)
+	# ---------------------------
+
+		# Incremental Compilation Assignments
+		# ===================================
+		set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+		set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+		set_global_assignment -name PARTITION_COLOR 14622752 -section_id Top
+
+	# end DESIGN_PARTITION(Top)
+	# -------------------------
+
+# end ENTITY(DM9000A_test)
+# ------------------------
+set_global_assignment -name VECTOR_COMPARE_TRIGGER_MODE INPUT_EDGE
+set_global_assignment -name VHDL_FILE ../../VHDL/DM9000A/DM9000A_test.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/DM9000A/DM9000A_Ethernet.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/pllx4d5.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/fifo4096x16.vhd
+set_global_assignment -name SEARCH_PATH "d:\\sync\\phd\\rangeimaging\\altera\\tcl_scripts"
+set_location_assignment PIN_AB6 -to ENET_CLK
+set_location_assignment PIN_Y5 -to ENET_CMD
+set_location_assignment PIN_AB5 -to ENET_CS_N
+set_location_assignment PIN_AC7 -to ENET_INT
+set_location_assignment PIN_Y6 -to ENET_RD_N
+set_location_assignment PIN_AB8 -to ENET_WR_N
+set_location_assignment PIN_W8 -to ENET_DATA[0]
+set_location_assignment PIN_AA12 -to ENET_DATA[1]
+set_location_assignment PIN_W7 -to ENET_DATA[2]
+set_location_assignment PIN_AB11 -to ENET_DATA[3]
+set_location_assignment PIN_AE2 -to ENET_DATA[4]
+set_location_assignment PIN_AE1 -to ENET_DATA[5]
+set_location_assignment PIN_AE4 -to ENET_DATA[6]
+set_location_assignment PIN_AC2 -to ENET_DATA[7]
+set_location_assignment PIN_AA7 -to ENET_DATA[8]
+set_location_assignment PIN_AA6 -to ENET_DATA[9]
+set_location_assignment PIN_Y8 -to ENET_DATA[10]
+set_location_assignment PIN_Y10 -to ENET_DATA[11]
+set_location_assignment PIN_Y7 -to ENET_DATA[12]
+set_location_assignment PIN_Y9 -to ENET_DATA[13]
+set_location_assignment PIN_W12 -to ENET_DATA[14]
+set_location_assignment PIN_Y11 -to ENET_DATA[15]
+set_location_assignment PIN_AC1 -to debug[0]
+set_location_assignment PIN_Y3 -to debug[4]
+set_instance_assignment -name IO_STANDARD "1.8 V" -to clk50
+set_instance_assignment -name IO_STANDARD "1.8 V" -to clk125
+set_location_assignment PIN_T33 -to clk50
+set_location_assignment PIN_B16 -to clk125
+set_instance_assignment -name IO_STANDARD "2.5 V" -to reset_n
+set_location_assignment PIN_AP5 -to reset_n
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to reset_n
+set_instance_assignment -name IO_STANDARD "1.8 V" -to buttons
+set_location_assignment PIN_B17 -to buttons[0]
+set_location_assignment PIN_A17 -to buttons[1]
+set_location_assignment PIN_A16 -to buttons[2]
+set_location_assignment PIN_K17 -to buttons[3]
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to buttons
+set_instance_assignment -name IO_STANDARD "1.8 V" -to leds
+set_location_assignment PIN_F21 -to leds[0]
+set_location_assignment PIN_C23 -to leds[1]
+set_location_assignment PIN_B23 -to leds[2]
+set_location_assignment PIN_A23 -to leds[3]
+set_location_assignment PIN_D19 -to leds[4]
+set_location_assignment PIN_C19 -to leds[5]
+set_location_assignment PIN_F19 -to leds[6]
+set_location_assignment PIN_E19 -to leds[7]
+set_instance_assignment -name IO_STANDARD "1.8 V" -to switches
+set_location_assignment PIN_B19 -to switches[0]
+set_location_assignment PIN_A19 -to switches[1]
+set_location_assignment PIN_C18 -to switches[2]
+set_location_assignment PIN_A20 -to switches[3]
+set_location_assignment PIN_K19 -to switches[4]
+set_location_assignment PIN_J19 -to switches[5]
+set_location_assignment PIN_L19 -to switches[6]
+set_location_assignment PIN_L20 -to switches[7]
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to switches
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ssd_c
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ssd_a
+set_location_assignment PIN_AE10 -to ssd_c[0]
+set_location_assignment PIN_AL5 -to ssd_c[1]
+set_location_assignment PIN_AC12 -to ssd_c[2]
+set_location_assignment PIN_AM5 -to ssd_c[3]
+set_location_assignment PIN_AF11 -to ssd_c[4]
+set_location_assignment PIN_AM6 -to ssd_c[5]
+set_location_assignment PIN_AP3 -to ssd_c[6]
+set_location_assignment PIN_AK6 -to ssd_c[7]
+set_location_assignment PIN_AH11 -to ssd_c[8]
+set_location_assignment PIN_AM4 -to ssd_a[3]
+set_location_assignment PIN_AE12 -to ssd_a[2]
+set_location_assignment PIN_AL4 -to ssd_a[1]
+set_location_assignment PIN_AH8 -to ssd_a[0]
+set_instance_assignment -name IO_STANDARD "2.5 V" -to lcd_RW
+set_instance_assignment -name IO_STANDARD "2.5 V" -to lcd_RS
+set_instance_assignment -name IO_STANDARD "2.5 V" -to lcd_E
+set_instance_assignment -name IO_STANDARD "2.5 V" -to lcd_data
+set_location_assignment PIN_AD12 -to lcd_E
+set_location_assignment PIN_AP2 -to lcd_RS
+set_location_assignment PIN_AJ8 -to lcd_data[0]
+set_location_assignment PIN_AJ6 -to lcd_data[1]
+set_location_assignment PIN_AD13 -to lcd_data[2]
+set_location_assignment PIN_AJ7 -to lcd_data[3]
+set_location_assignment PIN_AF10 -to lcd_data[4]
+set_location_assignment PIN_AN6 -to lcd_data[5]
+set_location_assignment PIN_AN3 -to lcd_data[6]
+set_location_assignment PIN_AK7 -to lcd_data[7]
+set_location_assignment PIN_AL8 -to lcd_RW

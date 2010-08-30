@@ -27,15 +27,15 @@ architecture rtl of DM9000A_model is
   signal tri         : std_logic                     := '0';
   signal din         : std_logic_vector(15 downto 0) := (others => '0');
   signal dout        : std_logic_vector(15 downto 0) := (others => '0');
-  signal addr        : std_logic_vector(15 downto 0)  := (others => '0');
-  signal dm_ready    : std_logic                     := '0';	  
-  signal tx_done1 : std_logic := '0';
-  signal tx_done2 : std_logic := '0';
-  signal ready_count : std_logic_vector(7 downto 0)  := (others => '0');  	 
-  																	   
-  signal tx_packet_length : std_logic_vector(15 downto 0) := (others => '0');																	   
-  signal tx_counter : std_logic_vector(15 downto 0) := (others => '0');		 
-  signal tx_inprogress : std_logic := '0';
+  signal addr        : std_logic_vector(15 downto 0) := (others => '0');
+  signal dm_ready    : std_logic                     := '0';
+  signal tx_done1    : std_logic                     := '0';
+  signal tx_done2    : std_logic                     := '0';
+  signal ready_count : std_logic_vector(15 downto 0) := (others => '0');
+
+  signal tx_packet_length : std_logic_vector(15 downto 0) := (others => '0');
+  signal tx_counter       : std_logic_vector(15 downto 0) := (others => '0');
+  signal tx_inprogress    : std_logic                     := '0';
   
 begin  -- rtl
 
@@ -46,10 +46,16 @@ begin  -- rtl
     if reset_n = '0' then               -- asynchronous reset (active low)
       ready_count <= (others => '0');
       dm_ready    <= '0';
-    elsif falling_edge(clk) then         -- rising clock edge
-      ready_count <= ready_count + 1;
-      if ready_count = X"FF" then
-        dm_ready <= '1';
+    elsif falling_edge(clk) then        -- rising clock edge   
+      if dm_ready = '0' then
+        ready_count <= ready_count + 1;
+        if ready_count = X"00FF" then
+          dm_ready <= '1';
+        end if;
+      elsif tx_inprogress = '1' then
+        ready_count <= ready_count + 1;
+      else
+        ready_count <= (others => '0');
       end if;
     end if;
   end process RDY_DELAY;
@@ -57,15 +63,14 @@ begin  -- rtl
   REGISTERS : process (clk, reset_n)
   begin  -- process REGISTERS
     if reset_n = '0' then               -- asynchronous reset (active low)
-      tri  <= '1';
-      dout <= (others => '0');
-      addr <= (others => '0');	 
-	  tx_packet_length <= (others => '0');	
-	  tx_counter <= (others => '0');
-    elsif falling_edge(clk) then         -- rising clock edge
+      tri              <= '1';
+      dout             <= (others => '0');
+      addr             <= (others => '0');
+      tx_packet_length <= (others => '0');
+    elsif falling_edge(clk) then        -- rising clock edge
       -------------------------------------------------------------------------
       -- Reads
-      tri <= '1';	  	  
+      tri <= '1';
       if DM_IOR_n = '0' then
         tri <= '0';
       end if;
@@ -73,8 +78,8 @@ begin  -- rtl
         dout <= addr;
       else
         case addr is
-          when X"0001"  => dout <= (6 => dm_ready, 3 => tx_done2, 2 => tx_done1, others => '0');
-          when others => dout <= X"ABCD";
+          when X"0001" => dout <= (6 => dm_ready, 3 => tx_done2, 2 => tx_done1, others => '0');
+          when others  => dout <= X"ABCD";
         end case;
       end if;
 
@@ -83,31 +88,26 @@ begin  -- rtl
       if DM_IOW_n = '0' then
         if DM_CMD = '0' then
           addr <= DM_SD;
-        else		
-		  if addr = X"0002" then
-		  	if DM_SD(0) = '1' then
-				tx_counter <= (others => '0');
-				tx_inprogress <= '1';
-				tx_done1 <= '0';
-				tx_done2 <= '0';
-			end if;		
-		  elsif addr = X"00FC" then
-		  	tx_packet_length <= DM_SD;
-		  end if;
-          -- do nothing yet.
+        else
+          if addr = X"0002" then
+            tx_inprogress <= DM_SD(0);
+            tx_done1      <= not DM_SD(0);
+            tx_done2      <= not DM_SD(0);
+          elsif addr = X"00FC" then
+            tx_packet_length <= DM_SD;
+            tx_done1         <= '0';
+            tx_done2         <= '0';
+          end if;
         end if;
-      end if;  
-	  
-	  -- TX Counter
-	  if tx_inprogress = '1' then
-	  	tx_counter <= tx_counter + 1;	
-		if tx_counter = tx_packet_length then
-			tx_done1 <= '1';		 
-			tx_inprogress <= '0';
-		end if;
-	  else
-	    tx_counter <= (others => '0');
-	  end if;
+      end if;
+
+      -- check ready Counter
+      if tx_inprogress = '1' then
+        if ready_count = tx_packet_length then
+          tx_done1      <= '1';
+          tx_inprogress <= '0';
+        end if;
+      end if;
     end if;
   end process REGISTERS;
 

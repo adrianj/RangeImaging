@@ -30,8 +30,8 @@ entity DM9000A_Ethernet is
     DM_INT   : in    std_logic;
     DM_CLK   : out   std_logic;
     DM_SD    : inout std_logic_vector(15 downto 0);
-	
-	debug : out std_logic_vector(15 downto 0)
+
+    debug : out std_logic_vector(15 downto 0)
     );
 
 end DM9000A_Ethernet;
@@ -44,29 +44,42 @@ architecture rtl of DM9000A_Ethernet is
   constant MAC_ADDR_D         : std_logic_vector(47 downto 0) := X"01606E11020F";
   -- Default destination address is 192.168.0.1
   signal   ip_dest_addr       : std_logic_vector(31 downto 0) := X"C0A80001";  -- A(9:8)
-  constant IP_DEST_ADDR_D     : std_logic_vector(31 downto 0) := X"C0A80001";
+  constant IP_DEST_ADDR_D     : std_logic_vector(31 downto 0) := X"C0A80001";  -- 192.168.0.1
 -- Default source address is 192.168.0.2
   signal   ip_src_addr        : std_logic_vector(31 downto 0) := X"C0A80002";  -- A(11:10)
-  constant IP_SRC_ADDR_D      : std_logic_vector(31 downto 0) := X"C0A80002";
+  constant IP_SRC_ADDR_D      : std_logic_vector(31 downto 0) := X"C0A80002";  -- 192.168.0.2
   -- Default source port is 54155
   signal   source_port        : std_logic_vector(15 downto 0) := X"D38B";  -- A(12)
   constant SOURCE_PORT_D      : std_logic_vector(15 downto 0) := X"D38B";
   -- Default destination port is 2223
   signal   dest_port          : std_logic_vector(15 downto 0) := X"08AF";  -- A(13)
   constant DEST_PORT_D        : std_logic_vector(15 downto 0) := X"08AF";
-  signal   s_reset            : std_logic                     := '1';  -- A(0), bit(0)
+  -- Synchronous reset. Resets state machine to Init State, which reinitialises DM9000A and Fifo buffers.
+  signal   s_reset            : std_logic                     := '1';  -- A(0), bit(0)                                   
+  -- Clears fifo buffers.
   signal   tx_flush           : std_logic                     := '0';  -- A(0), bit(1)
-  signal   dm_ready           : std_logic                     := '0';  -- A(0), bit(2)
+  -- DM9000A link active - as per Network Status Register
+  signal   dm_ready           : std_logic                     := '0';  -- A(0), bit(2)   
+  -- Begin transferring header immediately to DM9000A, waiting for tx_data_length words of data before TX_INITIATE
+  signal   early_start        : std_logic                     := '1';  -- A(0), bit(3)         
+  constant EARLY_START_D      : std_logic                     := '1';
+  -- Pauses the ethernet controller in the TX_HOLD state. Useful if changing tx_packet_length, ports, addresses, etc.
+  signal   pause              : std_logic                     := '0';  -- A(0), bit(4)        
+  -- Indicates that transfer is in progress. Basically checks if state = TX_HOLD then returns '0', else '1'.
+  signal   tx_inprogress      : std_logic                     := '0';  -- A(0), bit(5)
   -- default packet length is 1328 Bytes = 14 MAC, 20 IP, 8 UDP, 1286 Data
-  signal   tx_packet_length   : std_logic_vector(15 downto 0) := X"0530";  -- = DATA_LENGTH + 42
-  constant TX_PACKET_LENGTH_D : std_logic_vector(15 downto 0) := X"0045";
+  signal   tx_packet_length   : std_logic_vector(15 downto 0) := X"0530";  -- = DATA_LENGTH + HEADER_LENGTH
   signal   tx_data_length     : std_logic_vector(15 downto 0) := X"0506";  -- A(1)
-  constant TX_DATA_LENGTH_D   : std_logic_vector(15 downto 0) := X"0030";
-  signal   tx_header_length   : std_logic_vector(15 downto 0) := X"0015";
-  constant TX_HEADER_LENGTH_D : std_logic_vector(15 downto 0) := X"0015";  -- = 21 (This counted in int16s)
-  constant MAC_LENGTH         : std_logic_vector(15 downto 0) := X"0007";
-  constant IP_LENGTH          : std_logic_vector(15 downto 0) := X"000A";
-  constant UDP_LENGTH         : std_logic_vector(15 downto 0) := X"0004";
+  constant TX_DATA_LENGTH_D   : std_logic_vector(15 downto 0) := X"0006";  -- (counted in BYTES)
+  signal   tx_header_length   : std_logic_vector(15 downto 0) := X"002A";
+  constant TX_HEADER_LENGTH_D : std_logic_vector(15 downto 0) := X"002A";  -- = 21 (This counted in BYTES)
+  constant MAC_LENGTH         : std_logic_vector(15 downto 0) := X"000E";
+  constant IP_LENGTH          : std_logic_vector(15 downto 0) := X"0014";
+  constant UDP_LENGTH         : std_logic_vector(15 downto 0) := X"0008";
+  -- Maximum ethernet frame has 1500 bytes, including IP and UDP headers.
+  constant MAX_DATA_LENGTH    : std_logic_vector(15 downto 0) := X"05DC"-UDP_LENGTH-IP_LENGTH;
+  -- There is also a minimum ethernet payload of 64 bytes. Small frames like this will be padded out with junk from the FIFO.
+  signal   MIN_PACKET_LENGTH  : std_logic_vector(15 downto 0) := X"0040"+MAC_LENGTH;
   -----------------------------------------------------------------------------
 
   -- Registering external inputs, and tristate control
@@ -83,23 +96,24 @@ architecture rtl of DM9000A_Ethernet is
   signal tx_fifo_dout  : std_logic_vector(15 downto 0) := (others => '0');
   signal tx_fifo_empty : std_logic                     := '0';
   signal tx_fifo_count : std_logic_vector(11 downto 0) := (others => '0');
+  signal tx_fifo_sclr  : std_logic                     := '0';
 -------------------------------------------------------------------------------   
 
   -- Packet header, counter and checksum signals
   type   PACKET_ARRAY is array (natural range <>) of std_logic_vector(15 downto 0);
-  signal header   : PACKET_ARRAY(31 downto 0);
-  signal checksum : std_logic_vector(15 downto 0) := (others => '0');
-  signal p_count  : std_logic_vector(15 downto 0) := (others => '0');
+  signal header            : PACKET_ARRAY(31 downto 0);
+  signal checksum          : std_logic_vector(19 downto 0) := (others => '0');
+  signal p_count           : std_logic_vector(15 downto 0) := (others => '0');
+  signal CHECKSUM_POSITION : std_logic_vector(15 downto 0) := X"0018";
 
   -----------------------------------------------------------------------------
   -- State machine and other signals
-  type   STATE_TYPE is (INIT, FLUSH_BUFFERS, TX_HOLD, TX_INIT, TX_SEND_HEADER, TX_SEND_DATA, TX_INITIATE, TX_WAIT_FOR_DONE, TX_DONE);
-  signal state      : STATE_TYPE                    := INIT;
-  signal clk_count  : std_logic_vector(7 downto 0)  := (others => '0');
-  signal clk_count4 : std_logic_vector(7 downto 0)  := (others => '0');
-  signal clk_count2 : std_logic_vector(7 downto 0)  := (others => '0');
-  signal clk50      : std_logic                     := '0';
-  signal ZERO       : std_logic_vector(15 downto 0) := (others => '0');  -- Use this signal for procedures that require a ZERO input signal.
+  type   STATE_TYPE is (INIT, WAIT_FOR_READY, FLUSH_BUFFERS, TX_HOLD, TX_INIT, TX_SEND_HEADER, TX_SEND_DATA, TX_INITIATE, TX_WAIT_FOR_DONE, TX_DONE);
+  signal state      : STATE_TYPE                   := INIT;
+  signal clk_count  : std_logic_vector(7 downto 0) := (others => '0');
+  signal clk_count4 : std_logic_vector(7 downto 0) := (others => '0');
+  signal clk_count2 : std_logic_vector(7 downto 0) := (others => '0');
+  signal clk50      : std_logic                    := '0';
 
   -----------------------------------------------------------------------------   
   -- IO_SET_INDEX         
@@ -210,7 +224,7 @@ architecture rtl of DM9000A_Ethernet is
 begin  -- rtl                                                                                                     
 
   -----------------------------------------------------------------------------
-  DM_SD <= DM_SDo when DM_tri = '0' else (others => 'Z');	 
+  DM_SD <= DM_SDo when DM_tri = '0' else (others => 'Z');
   debug <= NSR;
 
   DO_SFRS : process (clk, reset_n)
@@ -221,23 +235,41 @@ begin  -- rtl
       ip_src_addr      <= IP_SRC_ADDR_D;
       source_port      <= SOURCE_PORT_D;
       dest_port        <= DEST_PORT_D;
-      tx_packet_length <= TX_PACKET_LENGTH_D;
+      tx_packet_length <= (others => '0');
+      tx_header_length <= (others => '0');
       tx_data_length   <= TX_DATA_LENGTH_D;
       sfr_dout         <= (others => '0');
+      early_start      <= EARLY_START_D;
+      pause            <= '0';
+      tx_inprogress    <= '0';
     elsif rising_edge(clk) then         -- rising clock edge
       -- These values are only pulsed.
       s_reset          <= '0';
       tx_flush         <= '0';
       tx_header_length <= MAC_LENGTH + IP_LENGTH + UDP_LENGTH;
       tx_packet_length <= tx_data_length + tx_header_length;
+      if state = INIT or state = WAIT_FOR_READY or state = FLUSH_BUFFERS or state = TX_HOLD then
+        tx_inprogress <= '0';
+      else
+        tx_inprogress <= '1';
+      end if;
 
       -------------------------------------------------------------------------
       -- SFR Writes
       if sfr_we = '1' then
         case sfr_addr is
-          when X"0"   => s_reset                    <= sfr_din(0); tx_flush <= sfr_din(1);
-          when X"1"   => tx_data_length             <= sfr_din;
-                         --when X"2"   => tx_data_length             <= sfr_din;
+          when X"0" =>
+            s_reset     <= sfr_din(0);
+            tx_flush    <= sfr_din(1);
+            early_start <= sfr_din(3);
+            pause       <= sfr_din(4);
+          when X"1" =>
+            if sfr_din > MAX_DATA_LENGTH then
+              tx_data_length <= MAX_DATA_LENGTH;
+            else
+              tx_data_length <= sfr_din;
+            end if;
+            --when X"2"   => tx_data_length             <= sfr_din;
           when X"5"   => mac_addr(15 downto 0)      <= sfr_din;
           when X"6"   => mac_addr(31 downto 16)     <= sfr_din;
           when X"7"   => mac_addr(47 downto 32)     <= sfr_din;
@@ -253,7 +285,8 @@ begin  -- rtl
       -------------------------------------------------------------------------
       -- SFR Reads
       case sfr_addr is
-        when X"0"   => sfr_dout <= (2 => dm_ready, others => '0');
+        when X"0"                     => sfr_dout <= (2 => dm_ready, 3 => early_start, 4 => pause,
+                                    5 => tx_inprogress, others => '0');
         when X"1"   => sfr_dout <= tx_data_length;
                        --when X"2"   => sfr_dout <= tx_data_length;
         when X"5"   => sfr_dout <= mac_addr(15 downto 0);
@@ -279,6 +312,10 @@ begin  -- rtl
       clk50 <= not clk50;
       if state = FLUSH_BUFFERS or state = TX_HOLD or state = TX_DONE then
         clk_count <= (others => '0');
+      elsif state = TX_SEND_DATA and p_count = tx_packet_length and clk_count2 = "11" then
+        clk_count <= (others => '0');
+      elsif state = TX_INITIATE and clk_count4 = X"0A" then
+        clk_count <= (others => '0');
       else
         clk_count <= clk_count + 1;
       end if;
@@ -290,8 +327,8 @@ begin  -- rtl
   DM_CLK <= clk50;
 
   -----------------------------------------------------------------------------
-  -- Main Loop: INIT -> FLUSH_BUFFERS -> TX_HOLD -> TX_INIT -> TX_SEND_HEADER
-  -- -> TX_SEND_DATA -> TX_INITIATE -> TX_DONE -> TX_HOLD.
+  -- Main Loop: INIT -> WAIT_FOR_READY -> FLUSH_BUFFERS -> TX_HOLD -> TX_INIT 
+  -- -> TX_SEND_HEADER -> TX_SEND_DATA -> TX_INITIATE -> TX_DONE -> TX_HOLD.
   -- Resets to INIT on reset_n and s_reset.
   -- Resets to FLUSH_BUFFERS on tx_flush.
   -----------------------------------------------------------------------------
@@ -311,6 +348,11 @@ begin  -- rtl
         case STATE is
           when INIT =>
             dm_ready <= '0';
+            if clk_count = X"2F" then
+              state <= WAIT_FOR_READY;
+            end if;
+          when WAIT_FOR_READY =>
+            dm_ready <= '0';
             if NSR(6) = '1' then
               state <= FLUSH_BUFFERS;
             end if;
@@ -319,7 +361,7 @@ begin  -- rtl
             state    <= TX_HOLD;
           when TX_HOLD =>
             dm_ready <= '1';
-            if tx_fifo_count >= tx_data_length(11 downto 0) then
+            if pause = '0' and (tx_fifo_count >= tx_data_length(11 downto 0) or early_start = '1') then
               state <= TX_INIT;
             end if;
           when TX_INIT =>
@@ -334,10 +376,10 @@ begin  -- rtl
               state <= TX_SEND_DATA;
             end if;
           when TX_SEND_DATA =>
-            if clk_count2 = "10" and p_count < tx_packet_length then
+            if clk_count2(1 downto 0) = "10" and p_count < tx_packet_length and tx_fifo_empty = '0' then
               tx_fifo_re <= '1';
             end if;
-            if p_count = tx_packet_length and clk_count2 = "11" then
+            if p_count >= tx_packet_length and p_count >= MIN_PACKET_LENGTH and clk_count2(1 downto 0) = "11" then
               state <= TX_INITIATE;
             end if;
           when TX_INITIATE =>
@@ -345,7 +387,7 @@ begin  -- rtl
               state <= TX_WAIT_FOR_DONE;
             end if;
           when TX_WAIT_FOR_DONE =>
-            if NSR(2) = '1' or NSR(3) = '1' then
+            if clk_count4 = X"07" and (NSR(2) = '1' or NSR(3) = '1') then
               state <= TX_DONE;
             end if;
           when TX_DONE =>
@@ -374,6 +416,11 @@ begin  -- rtl
       DM_CS_n <= '0';                   -- IC is always selected.
       case state is
         when INIT =>
+          -- Write in MAC address
+          IO_WRITE_DATA(X"10", mac_addr(15 downto 0), X"00", clk_count, DM_IOW_n, DM_CMD, DM_tri, DM_SDo);
+          IO_WRITE_DATA(X"12", mac_addr(31 downto 16), X"0C", clk_count, DM_IOW_n, DM_CMD, DM_tri, DM_SDo);
+          IO_WRITE_DATA(X"14", mac_addr(47 downto 32), X"18", clk_count, DM_IOW_n, DM_CMD, DM_tri, DM_SDo);
+        when WAIT_FOR_READY =>
           -- Repeatedly check Link active signal (Reg01 = X"40")
           IO_READ_DATA(X"01", NSR, X"00", clk_count4, DM_IOW_n, DM_IOR_n, DM_CMD, DM_tri, DM_SDo, DM_SD);
         when TX_INIT =>
@@ -383,16 +430,20 @@ begin  -- rtl
           IO_SET_INDEX(X"F8", X"0A", clk_count, DM_IOW_n, DM_CMD, DM_tri, DM_SDo);
           p_count <= (others => '0');
         when TX_SEND_HEADER =>
-          -- Write header data
-          IO_WRITE(header(0), X"00", clk_count2, DM_IOW_n, DM_CMD, DM_tri, DM_SDo);
+          -- Write header data   
+          if p_count = CHECKSUM_POSITION then
+            IO_WRITE(checksum(15 downto 0), X"00", clk_count2, DM_IOW_n, DM_CMD, DM_tri, DM_SDo);
+          else
+            IO_WRITE(header(0), X"00", clk_count2, DM_IOW_n, DM_CMD, DM_tri, DM_SDo);
+          end if;
           if clk_count2 = "00" then
-            p_count <= p_count + 1;
+            p_count <= p_count + 2;
           end if;
         when TX_SEND_DATA =>
           -- Write packet data
           IO_WRITE(tx_fifo_dout, X"00", clk_count2, DM_IOW_n, DM_CMD, DM_tri, DM_SDo);
-          if clk_count2 = "00" then
-            p_count <= p_count + 1;
+          if clk_count2 = "00" and tx_fifo_empty = '0' then
+            p_count <= p_count + 2;
           end if;
         when TX_INITIATE =>
           -- write to Transmit Control Register (reg X"02). Value of X"01" initiates TX.
@@ -415,31 +466,38 @@ begin  -- rtl
     elsif rising_edge(clk) then         -- rising clock edge
       if state = TX_INIT then
         -- destination MAC is broadcast
-        header(0)  <= X"FFFF";
-        header(1)  <= X"FFFF";
-        header(2)  <= X"FFFF";
+        header(0) <= X"FFFF";
+        header(1) <= X"FFFF";
+        header(2) <= X"FFFF";
         -- source MAC
-        header(3)  <= mac_addr(47 downto 32);
-        header(4)  <= mac_addr(31 downto 16);
-        header(5)  <= mac_addr(15 downto 0);
+        header(3) <= mac_addr(47 downto 32);
+        header(4) <= mac_addr(31 downto 16);
+        header(5) <= mac_addr(15 downto 0);
         -- type (IP)
-        header(6)  <= X"0800";
-        -- IP header length
-        header(7)  <= X"4500";
-        -- total packet length
-        header(8)  <= tx_packet_length;
-        -- ID, fragment, TTL
+        header(6) <= X"0800";
+        -- IP version (4), header length (5), differentiated services (0).
+        header(7) <= X"4500";
+        -- total packet length (including headers)
+        if tx_packet_length < MIN_PACKET_LENGTH then
+          header(8) <= MIN_PACKET_LENGTH;
+        else
+          header(8) <= tx_packet_length;
+        end if;
+        -- ID
         header(9)  <= X"A004";
+        -- fragmet (0)
         header(10) <= X"0000";
-        header(11) <= X"4011";
+        -- TTL & UDP protocol
+        header(11) <= X"0811";
         -- checksum of IP packet
-        header(12) <= checksum;
+        header(12) <= X"0000";
         -- source IP addr
-        header(13) <= ip_src_addr(15 downto 0);
-        header(14) <= ip_src_addr(31 downto 16);
+        header(13) <= ip_src_addr(31 downto 16);
+        header(14) <= ip_src_addr(15 downto 0);
         -- dest IP addr
-        header(15) <= ip_dest_addr(15 downto 0);
-        header(16) <= ip_dest_addr(31 downto 16);
+        header(15) <= ip_dest_addr(31 downto 16);
+        header(16) <= ip_dest_addr(15 downto 0);
+        -- Begin UDP Header.
         -- source port
         header(17) <= source_port;
         -- dest port
@@ -451,14 +509,19 @@ begin  -- rtl
 
         -- blank out all unsused header locations
         header(31 downto 21) <= (others => (others => '0'));
+        -- Initialise checksum to 0, will be calculating during shift operation below.
         checksum             <= (others => '0');
       elsif state = TX_SEND_HEADER then
         -- Shift header along
         -- calculate checksum as packet is being transmitted. 
         if clk_count2 = "00" then
           header <= X"0000" & header(31 downto 1);
-          if p_count > MAC_LENGTH and p_count < MAC_LENGTH + IP_LENGTH then
-            checksum <= checksum + header(0);
+          if p_count < IP_LENGTH then
+            -- keep summing up 16 bit values
+            checksum <= checksum + (X"0" & header(7));
+          elsif p_count = IP_LENGTH then
+            -- add back overflow bits, then take 1's complement (ie, invert)
+            checksum <= not (checksum + (X"0000" & checksum(19 downto 16)));
           end if;
         end if;
       end if;
@@ -472,12 +535,13 @@ begin  -- rtl
       clock => clk,
       data  => tx_fifo_din,
       rdreq => tx_fifo_re,
-      sclr  => tx_flush,
+      sclr  => tx_fifo_sclr,
       wrreq => tx_fifo_we,
       empty => tx_fifo_empty,
       full  => tx_fifo_full,
       q     => tx_fifo_dout,
       usedw => tx_fifo_count);    
+  tx_fifo_sclr <= '1' when state = FLUSH_BUFFERS else '0';
 
 
 end rtl;
