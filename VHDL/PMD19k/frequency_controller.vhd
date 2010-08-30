@@ -66,7 +66,7 @@ begin  -- rtl
 
   SET_SCAN_C3 : if IS_CYCLONE3 = '1' generate
     SCAN_CHAIN_COUNT <= X"8F";	
-	SCAN_CHAIN_ACTUAL <= BYPASS & BYPASS & "00"&X"0000" & m_chain & n_chain & c0_chain & c1_chain
+	SCAN_CHAIN_ACTUAL <= BYPASS & BYPASS & "00"&X"0000" & n_chain & m_chain & c0_chain & c1_chain
                         & BYPASS & BYPASS & BYPASS;
   end generate SET_SCAN_C3;
   SET_SCAN_S3 : if IS_CYCLONE3 = '0' generate
@@ -81,7 +81,7 @@ begin  -- rtl
   -- n is bypassed.
   --n_chain  <= "10" & X"0000";   
   -- or is it???   
-  n_chain  <= '0' & X"00" & '1' & X"00";
+  n_chain  <= '0' & X"03" & '1' & X"02";
   c0_chain <= '0' & c0_hi_count & r_sel_odd(0) & c0_low_count;
   c1_chain <= '0' & c1_hi_count & r_sel_odd(1) & c1_low_count;
 

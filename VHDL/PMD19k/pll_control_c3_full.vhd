@@ -15,8 +15,8 @@ use ieee.std_logic_unsigned.all;
 entity pll_control_c3_full is
   generic (
     -- VCO pre_scale = 5, therefore actual VCO = 50 MHz / 5 * (M+M).
-    M_DEFAULT : in std_logic_vector(7 downto 0) := X"10";
-    C_DEFAULT : in std_logic_vector(7 downto 0) := X"0F"
+    M_DEFAULT : in std_logic_vector(7 downto 0) := X"28";
+    C_DEFAULT : in std_logic_vector(7 downto 0) := X"0A"
     );
   port (
     clk50              : in  std_logic;

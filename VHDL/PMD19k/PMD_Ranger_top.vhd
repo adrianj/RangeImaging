@@ -217,7 +217,7 @@ begin  -- rtl
 
   MODULATION_SOURCE_1 : entity work.mod_homodyne_c3
     generic map (IS_CYCLONE3 => IS_CYCLONE3,
-				M_DEFAULT => X"10",
+				M_DEFAULT => X"3C",
                  C_DEFAULT => X"0F")
     port map (
       clk                          => clk,

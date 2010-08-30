@@ -238,15 +238,15 @@ begin  -- testbench
 	-- Set Integration period
     niosWrite(X"0001", X"00000C80", clk100, control_addr, control_din, control_we_n); 
 	-- Set FPB_1
-    niosWrite(X"0010", X"00000005", clk100, control_addr, control_din, control_we_n);
+    niosWrite(X"0010", X"00000004", clk100, control_addr, control_din, control_we_n);
 	-- Set phase step_1	   CHANGED (was 2^16/fpb) Now is 240/fpb.
-    niosWrite(X"0012", X"00000030", clk100, control_addr, control_din, control_we_n);
+    niosWrite(X"0012", X"0000003C", clk100, control_addr, control_din, control_we_n);
 	-- Set phase scale 1   CHANGED, this is 2^16 / (cHi + cLo)
 	niosWrite(X"0018", X"00000111", clk100, control_addr, control_din, control_we_n);
 	-- Set FPB_2
-    niosWrite(X"0011", X"00000005", clk100, control_addr, control_din, control_we_n);
+    niosWrite(X"0011", X"00000004", clk100, control_addr, control_din, control_we_n);
 	-- Set phase step_2
-    niosWrite(X"0013", X"00000030", clk100, control_addr, control_din, control_we_n);
+    niosWrite(X"0013", X"0000003C", clk100, control_addr, control_din, control_we_n);
 	-- Set phase scale 2
 	niosWrite(X"0019", X"00000111", clk100, control_addr, control_din, control_we_n);
 	-- Set FPOF

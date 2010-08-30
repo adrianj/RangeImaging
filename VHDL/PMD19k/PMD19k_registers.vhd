@@ -173,16 +173,16 @@ begin  -- rtl
       s_reset                          <= '1';
       frame_received_ack               <= '0';
       pause_int                        <= '0';
-      frames_per_output_int            <= X"0005";
+      frames_per_output_int            <= X"0004";
       ssd_int                          <= X"1234";
       saturation_int <= X"8500";
-      fpb_1_int                        <= X"0005";
-      fpb_2_int                        <= X"0005";
-      phase_step_1_int                 <= X"0028";
-      phase_step_2_int                 <= X"0050";
-	  phase_scale_1_int <= X"0147";
-	  phase_scale_2_int <= X"0147";
-      integration_ratio_int            <= X"80";
+      fpb_1_int                        <= X"0004";	-- default steps_per_cycle = 1200 MHz / 40 MHz * 8 = 240
+      fpb_2_int                        <= X"0004";
+      phase_step_1_int                 <= X"003C";	-- default phase step = 120 / 4 = 30
+      phase_step_2_int                 <= X"003C";
+	  phase_scale_1_int <= X"0111"; -- default phase scale = 65536 / 240 = 273
+	  phase_scale_2_int <= X"0111";
+      integration_ratio_int            <= X"00";
       adc_data_int                     <= (others => '0');
       adc_we                           <= '0';
       pixel_scale_int                  <= (others => '0');
@@ -190,7 +190,9 @@ begin  -- rtl
       laser_control_int                <= "11";  -- default both on
       dc_offset_int                    <= (others => '0');
       phase_correction_1_int             <= X"15A0";
-      phase_correction_2_int             <= X"D418";
+      phase_correction_2_int             <= X"D418";   
+	  
+	  -- These reset parameters are based on 5 and 2.5 frames/cycle, fA = 40MHz, fB = 32 MHz.
       disambig_m_int <= "110";
       disambig_n_int <= "101";
       disambig_shift_int <= X"A";
