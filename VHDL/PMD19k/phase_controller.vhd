@@ -109,7 +109,7 @@ begin  -- rtl
     if reset_n = '0' then               -- asynchronous reset (active low)
       pcs_int       <= (others => '0');
       phase_up_down <= '0';		
-	  phase_counter_select <= (others => '0');
+	  phase_counter_select <= "0000";
     elsif rising_edge(clk) then         -- rising clock edge
         if pcs_int = "0000" then
           pcs_int <= "1111";

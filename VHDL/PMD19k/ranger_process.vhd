@@ -206,7 +206,8 @@ begin  -- rtl
       
       output_phase <= (others => '0');
       output_mag <= (others => '0');
-      output_valid <= '0';
+      output_valid <= '0';	
+	  output_addr <= (others => '0');
       
     elsif rising_edge(clk) then         -- rising clock edge
       -- clk cycle 0

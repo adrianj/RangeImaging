@@ -7,8 +7,9 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 entity mod_homodyne_c3 is
-  generic (
-    M_DEFAULT : in std_logic_vector(7 downto 0) := X"3C";
+  generic (			 
+    IS_CYCLONE3 : in std_logic := '1';
+    M_DEFAULT : in std_logic_vector(7 downto 0) := X"10";
     C_DEFAULT : in std_logic_vector(7 downto 0) := X"0F"
     );
   port (

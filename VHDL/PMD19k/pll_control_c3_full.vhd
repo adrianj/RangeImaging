@@ -15,7 +15,7 @@ use ieee.std_logic_unsigned.all;
 entity pll_control_c3_full is
   generic (
     -- VCO pre_scale = 5, therefore actual VCO = 50 MHz / 5 * (M+M).
-    M_DEFAULT : in std_logic_vector(7 downto 0) := X"3C";
+    M_DEFAULT : in std_logic_vector(7 downto 0) := X"10";
     C_DEFAULT : in std_logic_vector(7 downto 0) := X"0F"
     );
   port (
@@ -49,7 +49,7 @@ architecture rtl of pll_control_c3_full is
   signal desired_phase50 : std_logic_vector(15 downto 0) := (others => '0');
 
   signal config_update        : std_logic                    := '0';
-  signal phase_counter_select : std_logic_vector(3 downto 0) := "0010";
+  signal phase_counter_select : std_logic_vector(3 downto 0) := "0011";
   signal phase_step           : std_logic                    := '0';
   signal phase_up_down        : std_logic                    := '0';
   signal scan_clk_enable      : std_logic                    := '0';
@@ -90,9 +90,13 @@ architecture rtl of pll_control_c3_full is
   constant M_LOW_COUNT_ADDR  : std_logic_vector(3 downto 0) := X"9";
   signal   r_sel_odd         : std_logic_vector(1 downto 0) := "00";
   constant R_SEL_ODD_ADDR    : std_logic_vector(3 downto 0) := X"A";
+  																		
+
+  signal pcs : std_logic_vector(2 downto 0) := "011";
   
-  
-begin
+begin	  
+
+  pcs <= phase_counter_select(2 downto 0);
 
   -- Register all the inputs into the 50 MHz clock domain
   REGISTER_INPUTS : process (clk50, reset_n)
@@ -125,7 +129,7 @@ begin
       areset             => pll_reset,
       configupdate       => config_update,
       inclk0             => clk50,
-      phasecounterselect => phase_counter_select(2 downto 0),
+      phasecounterselect => pcs,
       phasestep          => phase_step,
       phaseupdown        => phase_up_down,
       scanclk            => clk50,

@@ -58,16 +58,21 @@ architecture rtl of frequency_controller is
 
   --signal n_low_count : std_logic_vector(7 downto 0) := X"00";
   --signal n_hi_count : std_logic_vector(7 downto 0) := X"00";
-  signal SCAN_CHAIN_COUNT : std_logic_vector(7 downto 0) := X"B3";
+  signal SCAN_CHAIN_COUNT : std_logic_vector(7 downto 0) := X"B3"; 
+  signal SCAN_CHAIN_ACTUAL : std_logic_vector(179 downto 0) := (others => '0');
   
 
 begin  -- rtl
 
   SET_SCAN_C3 : if IS_CYCLONE3 = '1' generate
-    SCAN_CHAIN_COUNT <= X"8F";
+    SCAN_CHAIN_COUNT <= X"8F";	
+	SCAN_CHAIN_ACTUAL <= BYPASS & BYPASS & "00"&X"0000" & m_chain & n_chain & c0_chain & c1_chain
+                        & BYPASS & BYPASS & BYPASS;
   end generate SET_SCAN_C3;
-  SET_SCAN_S3 : if IS_CYCLONE3 = '1' generate
-    SCAN_CHAIN_COUNT <= X"B3";
+  SET_SCAN_S3 : if IS_CYCLONE3 = '0' generate
+    SCAN_CHAIN_COUNT <= X"B3";	 
+	SCAN_CHAIN_ACTUAL <= PLL_CONST & m_chain & n_chain & c0_chain & c1_chain
+                        & BYPASS & BYPASS & BYPASS & BYPASS & BYPASS;
   end generate SET_SCAN_S3;
 
   m_chain  <= '0' & m_hi_count & '0' & m_low_count;
@@ -76,7 +81,7 @@ begin  -- rtl
   -- n is bypassed.
   --n_chain  <= "10" & X"0000";   
   -- or is it???   
-  n_chain  <= '0' & X"03" & '1' & X"02";
+  n_chain  <= '0' & X"00" & '1' & X"00";
   c0_chain <= '0' & c0_hi_count & r_sel_odd(0) & c0_low_count;
   c1_chain <= '0' & c1_hi_count & r_sel_odd(1) & c1_low_count;
 
@@ -104,10 +109,9 @@ begin  -- rtl
           reconfig_in_progress <= '1';
           state                <= SHIFTING;
           count                <= (others => '0');
-          scan_chain           <= PLL_CONST & m_chain & n_chain & c0_chain & c1_chain
-                                  & BYPASS & BYPASS & BYPASS & BYPASS & BYPASS;
+          scan_chain           <= SCAN_CHAIN_ACTUAL;
         when SHIFTING =>
-          if count = 179 then
+          if count = SCAN_CHAIN_COUNT then
             state <= UPDATE;
           end if;
           count           <= count + 1;

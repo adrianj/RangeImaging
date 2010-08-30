@@ -14,7 +14,8 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 entity PMD_Ranger_top is
-  generic (IS_TB : std_logic := '0');
+  generic (IS_CYCLONE3 : std_logic := '0';
+	OB_WIDTH : integer := 16);
   port (
     clk     : in  std_logic;
     clk50   : in  std_logic;
@@ -84,6 +85,7 @@ entity PMD_Ranger_top is
 end PMD_Ranger_top;
 
 architecture rtl of PMD_Ranger_top is
+
 
   signal frame_period : std_logic_vector(31 downto 0)
  := X"00000050";  --:= X"05F5E100";                        -- 1 s
@@ -214,7 +216,8 @@ begin  -- rtl
       laser_mod_out_2    => laser_mod_out_2);
 
   MODULATION_SOURCE_1 : entity work.mod_homodyne_c3
-    generic map (M_DEFAULT => X"3C",
+    generic map (IS_CYCLONE3 => IS_CYCLONE3,
+				M_DEFAULT => X"10",
                  C_DEFAULT => X"0F")
     port map (
       clk                          => clk,
@@ -279,76 +282,76 @@ begin  -- rtl
       adc_we           => adc_we); 
 
   TL_BUFFER : entity work.triram160x128xN
-	generic map ( N => 16 )
+	generic map ( N => OB_WIDTH )
     port map (
       address_a => TL_addr,
       address_b => TL_addr_int,
       address_c => vga_addr,
       clock     => clk,
-      data_a    => TL_din,
-      data_b    => TL_din_int,
+      data_a    => TL_din(15 downto 16-OB_WIDTH),
+      data_b    => TL_din_int(15 downto 16-OB_WIDTH),
       data_c    => (others => '0'),
       wren_a    => TL_wren,
       wren_b    => TL_wren_int,
       wren_c    => '0',
-      q_a       => TL_dout,
+      q_a       => TL_dout(15 downto 16-OB_WIDTH),
       q_b       => open,
-      q_c       => vga_TL_dout
+      q_c       => vga_TL_dout(15 downto 16-OB_WIDTH)
       );
 
   TR_BUFFER : entity work.triram160x128xN
-	generic map ( N => 16 )
+	generic map ( N => OB_WIDTH )
     port map (
       address_a => TR_addr,
       address_b => TR_addr_int,
       address_c => vga_addr,
       clock     => clk,
-      data_a    => TR_din,
-      data_b    => TR_din_int,
+      data_a    => TR_din(15 downto 16-OB_WIDTH),
+      data_b    => TR_din_int(15 downto 16-OB_WIDTH),
       data_c    => (others => '0'),
       wren_a    => TR_wren,
       wren_b    => TR_wren_int,
       wren_c    => '0',
-      q_a       => TR_dout,
+      q_a       => TR_dout(15 downto 16-OB_WIDTH),
       q_b       => open,
-      q_c       => vga_TR_dout
+      q_c       => vga_TR_dout(15 downto 16-OB_WIDTH)
       );
 
 
   BL_BUFFER : entity work.triram160x128xN
-	generic map ( N => 16 )
+	generic map ( N => OB_WIDTH )
     port map (
       address_a => BL_addr,
       address_b => BL_addr_int,
       address_c => vga_addr,
       clock     => clk,
-      data_a    => BL_din,
-      data_b    => BL_din_int,
+      data_a    => BL_din(15 downto 16-OB_WIDTH),
+      data_b    => BL_din_int(15 downto 16-OB_WIDTH),
       data_c    => (others => '0'),
       wren_a    => BL_wren,
       wren_b    => BL_wren_int,
       wren_c    => '0',
-      q_a       => BL_dout,
+      q_a       => BL_dout(15 downto 16-OB_WIDTH),
       q_b       => open,
-      q_c       => vga_BL_dout
+      q_c       => vga_BL_dout(15 downto 16-OB_WIDTH)
       );
 
   BR_BUFFER : entity work.triram160x128xN
-	generic map ( N => 16 )
+	generic map ( N => OB_WIDTH )
     port map (
       address_a => BR_addr,
       address_b => BR_addr_int,
       address_c => vga_addr,
       clock     => clk,
-      data_a    => BR_din,
-      data_b    => BR_din_int,
+      data_a    => BR_din(15 downto 16-OB_WIDTH),
+      data_b    => BR_din_int(15 downto 16-OB_WIDTH),
       data_c    => (others => '0'),
       wren_a    => BR_wren,
       wren_b    => BR_wren_int,
       wren_c    => '0',
-      q_a       => BR_dout,
+      q_a       => BR_dout(15 downto 16-OB_WIDTH),
       q_b       => open,
-      q_c       => vga_BR_dout
+      q_c       => vga_BR_dout(15 downto 16-OB_WIDTH)
       );
 
   PROCESSOR_1 : entity work.ranger_process

@@ -1,0 +1,80 @@
+# Copyright (C) 1991-2008 Altera Corporation
+# Your use of Altera Corporation's design tools, logic functions 
+# and other software and tools, and its AMPP partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Altera Program License 
+# Subscription Agreement, Altera MegaCore Function License 
+# Agreement, or other applicable license agreement, including, 
+# without limitation, that your use is for the sole purpose of 
+# programming logic devices manufactured by Altera and sold by 
+# Altera or its authorized distributors.  Please refer to the 
+# applicable agreement for further details.
+
+
+# The default values for assignments are stored in the file
+#		PMD19k_Cyclone_assignment_defaults.qdf
+# If this file doesn't exist, and for assignments not listed, see file
+#		assignment_defaults.qdf
+
+# Altera recommends that you do not modify this file. This
+# file is updated automatically by the Quartus II software
+# and any changes you make may be lost or overwritten.
+
+
+set_global_assignment -name FAMILY "Cyclone III"
+set_global_assignment -name DEVICE EP3C40F780C6
+set_global_assignment -name TOP_LEVEL_ENTITY PMD19k_Cyclone
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 8.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "15:34:33  AUGUST 30, 2010"
+set_global_assignment -name LAST_QUARTUS_VERSION 8.0
+set_global_assignment -name EDA_SIMULATION_TOOL "Custom VHDL"
+set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
+set_global_assignment -name USE_GENERATED_PHYSICAL_CONSTRAINTS OFF -section_id eda_palace
+set_global_assignment -name SEARCH_PATH "d:\\sync\\phd\\rangeimaging\\altera\\tcl_scripts/"
+set_global_assignment -name CYCLONEII_OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name ENABLE_ADVANCED_IO_TIMING ON
+set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS ON
+set_global_assignment -name TIMEQUEST_DO_CCPP_REMOVAL ON
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_COLOR 14622752 -section_id Top
+set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.2V
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 780
+set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 6
+set_global_assignment -name USE_CONFIGURATION_DEVICE OFF
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/mod_homodyne_c3.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/pll_control_c3_full.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/pll_reconfig_full_c3.vhd
+set_global_assignment -name VHDL_FILE cpu.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/VGA_Monitor/vga_module.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/simple_logarithm.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/frequency_controller.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/signedmult18x18.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/signedmultXxY.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/phase_controller.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/pll_reconfig_full.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/cordic_cosine.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/cordic_atan.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/mod_disambig.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram128x128xN.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram32x128x1.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram32x128x9.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram32x128xN.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram128x128x1.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram128x128x9.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/testbench_functions.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/SPI_master.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/triram160x128xN.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram160x128xN.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/PMD19k_interface.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/PMD19k_registers.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/PMD_Ranger_top.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/ranger_process.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/vga_tester.vhd
+set_global_assignment -name VHDL_FILE PMD19k_Cyclone.vhd
+set_global_assignment -name QIP_FILE cpu.qip

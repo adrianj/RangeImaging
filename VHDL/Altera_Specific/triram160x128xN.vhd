@@ -44,7 +44,7 @@ architecture rtl of triram160x128xN is
 begin  -- rtl
 
   BLOCK_1 : entity work.dualram160x128xN
-	generic map ( N => 16 )
+	generic map ( N => N )
     port map (
       address_a => address_a,
       address_b => address_b_int,
