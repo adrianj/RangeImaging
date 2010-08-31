@@ -86,7 +86,8 @@ begin  -- testbench
   
   PMD_INT : entity work.PMD_Ranger_top	
   	generic map (IS_CYCLONE3 => '1',
-		OB_WIDTH => 16)
+		OB_WIDTH => 10,
+		SMALL_RAM => '1')
     port map (	 
       clk     => clk100,
 	  clk50		=> clk50,
@@ -232,7 +233,7 @@ begin  -- testbench
     reset_n <= '1';
     wait until clk100 = '1';
     -- Set max_frames
-    niosWrite(X"0003", X"00000000", clk100, control_addr, control_din, control_we_n);
+    niosWrite(X"0003", X"00000100", clk100, control_addr, control_din, control_we_n);
     -- Set Frame period
     niosWrite(X"0000", X"00000C80", clk100, control_addr, control_din, control_we_n);
 	-- Set Integration period

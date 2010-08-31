@@ -1,109 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?><system name="cpu">
     <parameter name="bonusData">bonusData 
 {
-   element BL
+   element clk50
    {
       datum _sortIndex
       {
-         value = "6";
-         type = "int";
-      }
-   }
-   element TR.avalon_slave
-   {
-      datum baseAddress
-      {
-         value = "524288";
-         type = "long";
-      }
-   }
-   element onchip_mem
-   {
-      datum _sortIndex
-      {
-         value = "1";
-         type = "int";
-      }
-      datum megawizard_uipreferences
-      {
-         value = "{}";
-         type = "String";
-      }
-   }
-   element timer_1ms.s1
-   {
-      datum baseAddress
-      {
-         value = "1576992";
-         type = "long";
-      }
-   }
-   element TL
-   {
-      datum _sortIndex
-      {
-         value = "4";
-         type = "int";
-      }
-   }
-   element pll.s1
-   {
-      datum baseAddress
-      {
-         value = "1576960";
-         type = "long";
-      }
-   }
-   element BL.avalon_slave
-   {
-      datum baseAddress
-      {
-         value = "786432";
-         type = "long";
-      }
-   }
-   element BR.avalon_slave
-   {
-      datum baseAddress
-      {
-         value = "1048576";
-         type = "long";
-      }
-   }
-   element frame_received.s1
-   {
-      datum baseAddress
-      {
-         value = "1577024";
-         type = "long";
-      }
-   }
-   element BR
-   {
-      datum _sortIndex
-      {
-         value = "7";
-         type = "int";
-      }
-   }
-   element ranger_cpu
-   {
-      datum _sortIndex
-      {
-         value = "2";
-         type = "int";
-      }
-      datum megawizard_uipreferences
-      {
-         value = "{}";
-         type = "String";
-      }
-   }
-   element TR
-   {
-      datum _sortIndex
-      {
-         value = "5";
+         value = "11";
          type = "int";
       }
    }
@@ -120,6 +22,163 @@
          type = "String";
       }
    }
+   element cpu
+   {
+   }
+   element TR
+   {
+      datum _sortIndex
+      {
+         value = "5";
+         type = "int";
+      }
+   }
+   element BL
+   {
+      datum _sortIndex
+      {
+         value = "6";
+         type = "int";
+      }
+   }
+   element TL.avalon_slave
+   {
+      datum baseAddress
+      {
+         value = "262144";
+         type = "long";
+      }
+   }
+   element ranger_cpu
+   {
+      datum _sortIndex
+      {
+         value = "2";
+         type = "int";
+      }
+      datum megawizard_uipreferences
+      {
+         value = "{}";
+         type = "String";
+      }
+   }
+   element pll.s1
+   {
+      datum baseAddress
+      {
+         value = "1576960";
+         type = "long";
+      }
+   }
+   element jtag_uart.avalon_jtag_slave
+   {
+      datum baseAddress
+      {
+         value = "1577040";
+         type = "long";
+      }
+   }
+   element ranger_cpu.jtag_debug_module
+   {
+      datum baseAddress
+      {
+         value = "1574912";
+         type = "long";
+      }
+   }
+   element frame_received.s1
+   {
+      datum baseAddress
+      {
+         value = "1577024";
+         type = "long";
+      }
+   }
+   element BR.avalon_slave
+   {
+      datum baseAddress
+      {
+         value = "1048576";
+         type = "long";
+      }
+   }
+   element onchip_mem.s1
+   {
+      datum baseAddress
+      {
+         value = "1441792";
+         type = "long";
+      }
+   }
+   element control
+   {
+      datum _sortIndex
+      {
+         value = "3";
+         type = "int";
+      }
+   }
+   element control.avalon_slave
+   {
+      datum baseAddress
+      {
+         value = "0";
+         type = "long";
+      }
+   }
+   element TR.avalon_slave
+   {
+      datum baseAddress
+      {
+         value = "524288";
+         type = "long";
+      }
+   }
+   element sysid.control_slave
+   {
+      datum baseAddress
+      {
+         value = "1310720";
+         type = "long";
+      }
+   }
+   element BL.avalon_slave
+   {
+      datum baseAddress
+      {
+         value = "786432";
+         type = "long";
+      }
+   }
+   element timer_1ms
+   {
+      datum _sortIndex
+      {
+         value = "9";
+         type = "int";
+      }
+      datum megawizard_uipreferences
+      {
+         value = "{}";
+         type = "String";
+      }
+   }
+   element BR
+   {
+      datum _sortIndex
+      {
+         value = "7";
+         type = "int";
+      }
+   }
+   element TL
+   {
+      datum _sortIndex
+      {
+         value = "4";
+         type = "int";
+      }
+   }
    element pll
    {
       datum _sortIndex
@@ -133,19 +192,32 @@
          type = "String";
       }
    }
-   element ranger_cpu.jtag_debug_module
+   element onchip_mem
    {
-      datum baseAddress
+      datum _sortIndex
       {
-         value = "1574912";
-         type = "long";
+         value = "1";
+         type = "int";
+      }
+      datum megawizard_uipreferences
+      {
+         value = "{}";
+         type = "String";
       }
    }
-   element jtag_uart.avalon_jtag_slave
+   element pll.c0
+   {
+      datum _clockDomain
+      {
+         value = "clk100";
+         type = "String";
+      }
+   }
+   element timer_1ms.s1
    {
       datum baseAddress
       {
-         value = "1577040";
+         value = "1576992";
          type = "long";
       }
    }
@@ -162,19 +234,11 @@
          type = "String";
       }
    }
-   element control
+   element sysid
    {
       datum _sortIndex
       {
-         value = "3";
-         type = "int";
-      }
-   }
-   element timer_1ms
-   {
-      datum _sortIndex
-      {
-         value = "9";
+         value = "12";
          type = "int";
       }
       datum megawizard_uipreferences
@@ -183,55 +247,15 @@
          type = "String";
       }
    }
-   element control.avalon_slave
-   {
-      datum baseAddress
-      {
-         value = "0";
-         type = "long";
-      }
-   }
-   element TL.avalon_slave
-   {
-      datum baseAddress
-      {
-         value = "262144";
-         type = "long";
-      }
-   }
-   element pll.c0
-   {
-      datum _clockDomain
-      {
-         value = "clk100";
-         type = "String";
-      }
-   }
-   element clk50
-   {
-      datum _sortIndex
-      {
-         value = "11";
-         type = "int";
-      }
-   }
-   element onchip_mem.s1
-   {
-      datum baseAddress
-      {
-         value = "1441792";
-         type = "long";
-      }
-   }
 }
 </parameter>
     <parameter name="deviceFamily" value="CYCLONEIII" />
     <parameter name="generateLegacySim" value="false" />
     <parameter name="hardcopyCompatible" value="false" />
     <parameter name="hdlLanguage" value="VHDL" />
-    <parameter name="projectName">PMD19k_Cyclone.quartus</parameter>
-    <parameter name="systemHash" value="14320818513" />
-    <parameter name="timeStamp" value="1283140035312" />
+    <parameter name="projectName" value="PMD19k_Cyclone.qpf" />
+    <parameter name="systemHash" value="11055944740" />
+    <parameter name="timeStamp" value="1283293370203" />
     <module name="clk50" kind="clock_source" version="8.0" enabled="1">
         <parameter name="clockFrequency" value="50000000" />
         <parameter name="clockFrequencyKnown" value="true" />
@@ -302,7 +326,7 @@
 -- Retrieval info: PRIVATE: GLOCKED_MODE_CHECK STRING "0"
 -- Retrieval info: PRIVATE: GLOCK_COUNTER_EDIT NUMERIC "1048575"
 -- Retrieval info: PRIVATE: HAS_MANUAL_SWITCHOVER STRING "1"
--- Retrieval info: PRIVATE: INCLK0_FREQ_EDIT STRING "50.000"
+-- Retrieval info: PRIVATE: INCLK0_FREQ_EDIT STRING "50.0"
 -- Retrieval info: PRIVATE: INCLK0_FREQ_UNIT_COMBO STRING "MHz"
 -- Retrieval info: PRIVATE: INCLK1_FREQ_EDIT STRING "100.000"
 -- Retrieval info: PRIVATE: INCLK1_FREQ_EDIT_CHANGED STRING "1"
@@ -364,7 +388,7 @@
 -- Retrieval info: CONSTANT: CLK0_PHASE_SHIFT STRING "0"
 -- Retrieval info: CONSTANT: COMPENSATE_CLOCK STRING "CLK0"
 -- Retrieval info: CONSTANT: INCLK0_INPUT_FREQUENCY NUMERIC "20000"
--- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone III"
+-- Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "CYCLONEIII"
 -- Retrieval info: CONSTANT: LPM_TYPE STRING "altpll"
 -- Retrieval info: CONSTANT: OPERATION_MODE STRING "NORMAL"
 -- Retrieval info: CONSTANT: PLL_TYPE STRING "Fast"
@@ -432,7 +456,7 @@
         <parameter name="initMemContent" value="true" />
         <parameter name="initializationFileName" value="onchip_mem" />
         <parameter name="instanceID" value="NONE" />
-        <parameter name="memorySize" value="131072" />
+        <parameter name="memorySize" value="65536" />
         <parameter name="readDuringWriteMode" value="DONT_CARE" />
         <parameter name="simAllowMRAMContentsFile" value="false" />
         <parameter name="slave1Latency" value="1" />
@@ -551,6 +575,7 @@
         <parameter name="simDrivenValue" value="0" />
         <parameter name="width" value="1" />
     </module>
+    <module name="sysid" kind="altera_avalon_sysid" version="8.0" enabled="1" />
     <connection kind="clock" version="8.0" start="clk50.clk" end="pll.inclk0" />
     <connection kind="clock" version="8.0" start="pll.c0" end="onchip_mem.clk1" />
     <connection kind="clock" version="8.0" start="pll.c0" end="ranger_cpu.clk" />
@@ -622,5 +647,10 @@
     </connection>
     <connection kind="interrupt" version="8.0" start="ranger_cpu.d_irq" end="frame_received.irq">
         <parameter name="irqNumber" value="2" />
+    </connection>
+    <connection kind="clock" version="8.0" start="pll.c0" end="sysid.clk" />
+    <connection kind="avalon" version="6.1" start="ranger_cpu.data_master" end="sysid.control_slave">
+        <parameter name="arbitrationPriority" value="1" />
+        <parameter name="baseAddress" value="0x00140000" />
     </connection>
 </system>

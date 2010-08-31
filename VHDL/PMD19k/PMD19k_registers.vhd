@@ -35,7 +35,8 @@ entity PMD19k_registers is
     integration_ratio            : out std_logic_vector(7 downto 0);
     step_direction               : out std_logic;
     pixel_scale                  : out std_logic_vector(3 downto 0);
-    process_select               : out std_logic;
+    process_select               : out std_logic;	
+	process_output_select : out std_logic_vector(7 downto 0);
     dc_offset                    : out std_logic_vector(15 downto 0);
     saturation_level : out std_logic_vector(15 downto 0);
     phase_correction_1             : out std_logic_vector(15 downto 0);
@@ -113,7 +114,9 @@ architecture rtl of PMD19k_registers is
   constant PHASE_CORRECTION_1_ADDR : std_logic_vector(15 downto 0) := X"000D";
   signal   phase_correction_2_int  : std_logic_vector(15 downto 0) := X"C6C8";
   constant PHASE_CORRECTION_2_ADDR : std_logic_vector(15 downto 0) := X"000E";
-
+  signal   process_output_select_int  : std_logic_vector(7 downto 0) := X"01";
+  constant PROCESS_OUTPUT_SELECT_ADDR : std_logic_vector(15 downto 0) := X"000F";
+  
   constant FPB_1_ADDR        : std_logic_vector(15 downto 0) := X"0010";
   constant FPB_2_ADDR        : std_logic_vector(15 downto 0) := X"0011";
   constant PHASE_STEP_1_ADDR : std_logic_vector(15 downto 0) := X"0012";
@@ -186,7 +189,8 @@ begin  -- rtl
       adc_data_int                     <= (others => '0');
       adc_we                           <= '0';
       pixel_scale_int                  <= (others => '0');
-      process_select_int               <= '0';
+      process_select_int               <= '0';	  
+	  process_output_select_int <= X"01";
       laser_control_int                <= "11";  -- default both on
       dc_offset_int                    <= (others => '0');
       phase_correction_1_int             <= X"15A0";
@@ -220,6 +224,7 @@ begin  -- rtl
           when DC_OFFSET_ADDR         => dc_offset_int         <= control_din(15 downto 0);
           when PHASE_CORRECTION_1_ADDR => phase_correction_1_int <= control_din(15 downto 0);
           when PHASE_CORRECTION_2_ADDR => phase_correction_2_int <= control_din(15 downto 0);
+		  when PROCESS_OUTPUT_SELECT_ADDR => process_output_select_int <= control_din(7 downto 0);
 
           when SATURATION_ADDR          => saturation_int          <= control_din(15 downto 0);
           when FPB_1_ADDR        => fpb_1_int        <= control_din(15 downto 0);
@@ -266,7 +271,8 @@ begin  -- rtl
   fpb_2                        <= fpb_2_int;
   pixel_scale                  <= pixel_scale_int;
   adc_control_data             <= adc_data_int;
-  process_select               <= process_select_int;
+  process_select               <= process_select_int;	
+  process_output_select <= process_output_select_int;
   laser_control                <= laser_control_int;
   dc_offset                    <= dc_offset_int;
   saturation_level <= saturation_int;
@@ -287,7 +293,7 @@ begin  -- rtl
                       laser_control_int, freq_1_dout, dc_offset_int, phase_correction_1_int, 
 					  phase_correction_2_int,freq_2_dout, phase_scale_1_int, phase_scale_2_int,
 					  disambig_m_int, disambig_n_int, disambig_weight1_int, disambig_weight2_int,
-					  disambig_mm_int, disambig_shift_int, saturation_int)
+					  disambig_mm_int, disambig_shift_int, saturation_int, process_output_select_int)
   begin  -- process DO_READS
     case control_addr is
       when FRAME_PD_ADDR => control_dout <= frame_period_int;
@@ -304,7 +310,8 @@ begin  -- rtl
       when FRAMES_PER_OUTPUT_ADDR => control_dout <= X"0000" & frames_per_output_int;
       when DC_OFFSET_ADDR         => control_dout <= X"0000" & dc_offset_int;
       when PHASE_CORRECTION_1_ADDR  => control_dout <= X"0000" & phase_correction_1_int; 
-      when PHASE_CORRECTION_2_ADDR  => control_dout <= X"0000" & phase_correction_2_int; 
+      when PHASE_CORRECTION_2_ADDR  => control_dout <= X"0000" & phase_correction_2_int;  
+	  when PROCESS_OUTPUT_SELECT_ADDR  => control_dout <= X"000000" & process_output_select_int; 
       when FPB_1_ADDR             => control_dout <= X"0000" & fpb_1_int;
       when FPB_2_ADDR             => control_dout <= X"0000" & fpb_2_int;
       when PHASE_STEP_1_ADDR      => control_dout <= X"0000" & phase_step_1_int;

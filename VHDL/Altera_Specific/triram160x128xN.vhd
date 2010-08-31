@@ -15,7 +15,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity triram160x128xN is
-  generic (N : integer := 32);
+  generic (N : integer := 32;
+  SMALL_RAM : std_logic := '0');
   port (
     address_a : in  std_logic_vector(14 downto 0);
     address_b : in  std_logic_vector(14 downto 0);
@@ -44,7 +45,8 @@ architecture rtl of triram160x128xN is
 begin  -- rtl
 
   BLOCK_1 : entity work.dualram160x128xN
-	generic map ( N => N )
+	generic map ( N => N,
+	SMALL_RAM => SMALL_RAM)
     port map (
       address_a => address_a,
       address_b => address_b_int,

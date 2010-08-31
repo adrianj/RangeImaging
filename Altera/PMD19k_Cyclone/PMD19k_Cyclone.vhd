@@ -108,8 +108,9 @@ begin
   ADC_adcclk <= not adcclk;
 
   PMD_TOP : entity work.PMD_Ranger_top
-    generic map (IS_TB => '0',
-    OB_WIDTH => 9)
+    generic map (IS_CYCLONE3 => '1',
+    OB_WIDTH => 10,
+    SMALL_RAM => '1')
     port map (
       clk50   => clk50,
       clk     => ex_clk,

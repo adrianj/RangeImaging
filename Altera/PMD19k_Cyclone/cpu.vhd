@@ -2361,7 +2361,7 @@ entity onchip_mem_s1_arbitrator is
 
               -- outputs:
                  signal d1_onchip_mem_s1_end_xfer : OUT STD_LOGIC;
-                 signal onchip_mem_s1_address : OUT STD_LOGIC_VECTOR (14 DOWNTO 0);
+                 signal onchip_mem_s1_address : OUT STD_LOGIC_VECTOR (13 DOWNTO 0);
                  signal onchip_mem_s1_byteenable : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
                  signal onchip_mem_s1_chipselect : OUT STD_LOGIC;
                  signal onchip_mem_s1_clken : OUT STD_LOGIC;
@@ -2459,7 +2459,7 @@ begin
   onchip_mem_s1_begins_xfer <= NOT d1_reasons_to_wait AND ((internal_ranger_cpu_data_master_qualified_request_onchip_mem_s1 OR internal_ranger_cpu_instruction_master_qualified_request_onchip_mem_s1));
   --assign onchip_mem_s1_readdata_from_sa = onchip_mem_s1_readdata so that symbol knows where to group signals which may go to master only, which is an e_assign
   onchip_mem_s1_readdata_from_sa <= onchip_mem_s1_readdata;
-  internal_ranger_cpu_data_master_requests_onchip_mem_s1 <= to_std_logic(((Std_Logic_Vector'(ranger_cpu_data_master_address_to_slave(20 DOWNTO 17) & std_logic_vector'("00000000000000000")) = std_logic_vector'("101100000000000000000")))) AND ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write));
+  internal_ranger_cpu_data_master_requests_onchip_mem_s1 <= to_std_logic(((Std_Logic_Vector'(ranger_cpu_data_master_address_to_slave(20 DOWNTO 16) & std_logic_vector'("0000000000000000")) = std_logic_vector'("101100000000000000000")))) AND ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write));
   --registered rdv signal_name registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1 assignment, which is an e_assign
   registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1 <= ranger_cpu_data_master_read_data_valid_onchip_mem_s1_shift_register_in;
   --onchip_mem_s1_arb_share_counter set values, which is an e_mux
@@ -2555,7 +2555,7 @@ begin
   onchip_mem_s1_writedata <= ranger_cpu_data_master_writedata;
   --mux onchip_mem_s1_clken, which is an e_mux
   onchip_mem_s1_clken <= std_logic'('1');
-  internal_ranger_cpu_instruction_master_requests_onchip_mem_s1 <= ((to_std_logic(((Std_Logic_Vector'(ranger_cpu_instruction_master_address_to_slave(20 DOWNTO 17) & std_logic_vector'("00000000000000000")) = std_logic_vector'("101100000000000000000")))) AND (ranger_cpu_instruction_master_read))) AND ranger_cpu_instruction_master_read;
+  internal_ranger_cpu_instruction_master_requests_onchip_mem_s1 <= ((to_std_logic(((Std_Logic_Vector'(ranger_cpu_instruction_master_address_to_slave(20 DOWNTO 16) & std_logic_vector'("0000000000000000")) = std_logic_vector'("101100000000000000000")))) AND (ranger_cpu_instruction_master_read))) AND ranger_cpu_instruction_master_read;
   --ranger_cpu/data_master granted onchip_mem/s1 last time, which is an e_register
   process (clk, reset_n)
   begin
@@ -2665,7 +2665,7 @@ begin
   onchip_mem_s1_write <= internal_ranger_cpu_data_master_granted_onchip_mem_s1 AND ranger_cpu_data_master_write;
   shifted_address_to_onchip_mem_s1_from_ranger_cpu_data_master <= ranger_cpu_data_master_address_to_slave;
   --onchip_mem_s1_address mux, which is an e_mux
-  onchip_mem_s1_address <= A_EXT (A_WE_StdLogicVector((std_logic'((internal_ranger_cpu_data_master_granted_onchip_mem_s1)) = '1'), (A_SRL(shifted_address_to_onchip_mem_s1_from_ranger_cpu_data_master,std_logic_vector'("00000000000000000000000000000010"))), (A_SRL(shifted_address_to_onchip_mem_s1_from_ranger_cpu_instruction_master,std_logic_vector'("00000000000000000000000000000010")))), 15);
+  onchip_mem_s1_address <= A_EXT (A_WE_StdLogicVector((std_logic'((internal_ranger_cpu_data_master_granted_onchip_mem_s1)) = '1'), (A_SRL(shifted_address_to_onchip_mem_s1_from_ranger_cpu_data_master,std_logic_vector'("00000000000000000000000000000010"))), (A_SRL(shifted_address_to_onchip_mem_s1_from_ranger_cpu_instruction_master,std_logic_vector'("00000000000000000000000000000010")))), 14);
   shifted_address_to_onchip_mem_s1_from_ranger_cpu_instruction_master <= ranger_cpu_instruction_master_address_to_slave;
   --d1_onchip_mem_s1_end_xfer register, which is an e_register
   process (clk, reset_n)
@@ -3444,6 +3444,7 @@ entity ranger_cpu_data_master_arbitrator is
                  signal d1_jtag_uart_avalon_jtag_slave_end_xfer : IN STD_LOGIC;
                  signal d1_onchip_mem_s1_end_xfer : IN STD_LOGIC;
                  signal d1_ranger_cpu_jtag_debug_module_end_xfer : IN STD_LOGIC;
+                 signal d1_sysid_control_slave_end_xfer : IN STD_LOGIC;
                  signal d1_timer_1ms_s1_end_xfer : IN STD_LOGIC;
                  signal frame_received_s1_irq_from_sa : IN STD_LOGIC;
                  signal frame_received_s1_readdata_from_sa : IN STD_LOGIC;
@@ -3462,6 +3463,7 @@ entity ranger_cpu_data_master_arbitrator is
                  signal ranger_cpu_data_master_granted_jtag_uart_avalon_jtag_slave : IN STD_LOGIC;
                  signal ranger_cpu_data_master_granted_onchip_mem_s1 : IN STD_LOGIC;
                  signal ranger_cpu_data_master_granted_ranger_cpu_jtag_debug_module : IN STD_LOGIC;
+                 signal ranger_cpu_data_master_granted_sysid_control_slave : IN STD_LOGIC;
                  signal ranger_cpu_data_master_granted_timer_1ms_s1 : IN STD_LOGIC;
                  signal ranger_cpu_data_master_qualified_request_BL_avalon_slave : IN STD_LOGIC;
                  signal ranger_cpu_data_master_qualified_request_BR_avalon_slave : IN STD_LOGIC;
@@ -3473,6 +3475,7 @@ entity ranger_cpu_data_master_arbitrator is
                  signal ranger_cpu_data_master_qualified_request_jtag_uart_avalon_jtag_slave : IN STD_LOGIC;
                  signal ranger_cpu_data_master_qualified_request_onchip_mem_s1 : IN STD_LOGIC;
                  signal ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module : IN STD_LOGIC;
+                 signal ranger_cpu_data_master_qualified_request_sysid_control_slave : IN STD_LOGIC;
                  signal ranger_cpu_data_master_qualified_request_timer_1ms_s1 : IN STD_LOGIC;
                  signal ranger_cpu_data_master_read : IN STD_LOGIC;
                  signal ranger_cpu_data_master_read_data_valid_BL_avalon_slave : IN STD_LOGIC;
@@ -3485,6 +3488,7 @@ entity ranger_cpu_data_master_arbitrator is
                  signal ranger_cpu_data_master_read_data_valid_jtag_uart_avalon_jtag_slave : IN STD_LOGIC;
                  signal ranger_cpu_data_master_read_data_valid_onchip_mem_s1 : IN STD_LOGIC;
                  signal ranger_cpu_data_master_read_data_valid_ranger_cpu_jtag_debug_module : IN STD_LOGIC;
+                 signal ranger_cpu_data_master_read_data_valid_sysid_control_slave : IN STD_LOGIC;
                  signal ranger_cpu_data_master_read_data_valid_timer_1ms_s1 : IN STD_LOGIC;
                  signal ranger_cpu_data_master_requests_BL_avalon_slave : IN STD_LOGIC;
                  signal ranger_cpu_data_master_requests_BR_avalon_slave : IN STD_LOGIC;
@@ -3496,6 +3500,7 @@ entity ranger_cpu_data_master_arbitrator is
                  signal ranger_cpu_data_master_requests_jtag_uart_avalon_jtag_slave : IN STD_LOGIC;
                  signal ranger_cpu_data_master_requests_onchip_mem_s1 : IN STD_LOGIC;
                  signal ranger_cpu_data_master_requests_ranger_cpu_jtag_debug_module : IN STD_LOGIC;
+                 signal ranger_cpu_data_master_requests_sysid_control_slave : IN STD_LOGIC;
                  signal ranger_cpu_data_master_requests_timer_1ms_s1 : IN STD_LOGIC;
                  signal ranger_cpu_data_master_write : IN STD_LOGIC;
                  signal ranger_cpu_jtag_debug_module_readdata_from_sa : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
@@ -3506,6 +3511,7 @@ entity ranger_cpu_data_master_arbitrator is
                  signal registered_ranger_cpu_data_master_read_data_valid_control_avalon_slave : IN STD_LOGIC;
                  signal registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1 : IN STD_LOGIC;
                  signal reset_n : IN STD_LOGIC;
+                 signal sysid_control_slave_readdata_from_sa : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
                  signal timer_1ms_s1_irq_from_sa : IN STD_LOGIC;
                  signal timer_1ms_s1_readdata_from_sa : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
 
@@ -3537,11 +3543,11 @@ begin
   --r_1 master_run cascaded wait assignment, which is an e_assign
   r_1 <= Vector_To_Std_Logic((((((((((((((((((((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_qualified_request_cpu_clock_0_in OR NOT ranger_cpu_data_master_requests_cpu_clock_0_in)))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_cpu_clock_0_in OR NOT ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))))) OR (((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(NOT cpu_clock_0_in_waitrequest_from_sa)))) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))))))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_cpu_clock_0_in OR NOT ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))))) OR (((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(NOT cpu_clock_0_in_waitrequest_from_sa)))) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))))))))) AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_qualified_request_frame_received_s1 OR NOT ranger_cpu_data_master_requests_frame_received_s1)))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_frame_received_s1 OR NOT ranger_cpu_data_master_read)))) OR (((std_logic_vector'("00000000000000000000000000000001") AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_read)))))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_frame_received_s1 OR NOT ranger_cpu_data_master_write)))) OR ((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_write)))))))) AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_qualified_request_jtag_uart_avalon_jtag_slave OR NOT ranger_cpu_data_master_requests_jtag_uart_avalon_jtag_slave)))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_jtag_uart_avalon_jtag_slave OR NOT ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))))) OR (((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(NOT jtag_uart_avalon_jtag_slave_waitrequest_from_sa)))) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))))))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_jtag_uart_avalon_jtag_slave OR NOT ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))))) OR (((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(NOT jtag_uart_avalon_jtag_slave_waitrequest_from_sa)))) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))))))))) AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((((ranger_cpu_data_master_qualified_request_onchip_mem_s1 OR registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1) OR NOT ranger_cpu_data_master_requests_onchip_mem_s1)))))) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_granted_onchip_mem_s1 OR NOT ranger_cpu_data_master_qualified_request_onchip_mem_s1)))))) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((((NOT ranger_cpu_data_master_qualified_request_onchip_mem_s1 OR NOT ranger_cpu_data_master_read) OR ((registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1 AND ranger_cpu_data_master_read)))))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_onchip_mem_s1 OR NOT ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))))) OR ((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))))))))) AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module OR NOT ranger_cpu_data_master_requests_ranger_cpu_jtag_debug_module)))))) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_granted_ranger_cpu_jtag_debug_module OR NOT ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module)))))));
   --r_2 master_run cascaded wait assignment, which is an e_assign
-  r_2 <= Vector_To_Std_Logic(((((((((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module OR NOT ranger_cpu_data_master_read)))) OR (((std_logic_vector'("00000000000000000000000000000001") AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_read))))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module OR NOT ranger_cpu_data_master_write)))) OR ((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_write)))))))) AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_qualified_request_timer_1ms_s1 OR NOT ranger_cpu_data_master_requests_timer_1ms_s1)))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_timer_1ms_s1 OR NOT ranger_cpu_data_master_read)))) OR (((std_logic_vector'("00000000000000000000000000000001") AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_read)))))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_timer_1ms_s1 OR NOT ranger_cpu_data_master_write)))) OR ((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_write)))))))));
+  r_2 <= Vector_To_Std_Logic((((((((((((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module OR NOT ranger_cpu_data_master_read)))) OR (((std_logic_vector'("00000000000000000000000000000001") AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_read))))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module OR NOT ranger_cpu_data_master_write)))) OR ((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_write)))))))) AND std_logic_vector'("00000000000000000000000000000001")) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_sysid_control_slave OR NOT ranger_cpu_data_master_read)))) OR (((std_logic_vector'("00000000000000000000000000000001") AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_read)))))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_sysid_control_slave OR NOT ranger_cpu_data_master_write)))) OR ((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_write)))))))) AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_data_master_qualified_request_timer_1ms_s1 OR NOT ranger_cpu_data_master_requests_timer_1ms_s1)))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_timer_1ms_s1 OR NOT ranger_cpu_data_master_read)))) OR (((std_logic_vector'("00000000000000000000000000000001") AND std_logic_vector'("00000000000000000000000000000001")) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_read)))))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_data_master_qualified_request_timer_1ms_s1 OR NOT ranger_cpu_data_master_write)))) OR ((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_data_master_write)))))))));
   --optimize select-logic by passing only those address bits which matter.
   internal_ranger_cpu_data_master_address_to_slave <= ranger_cpu_data_master_address(20 DOWNTO 0);
   --ranger_cpu/data_master readdata mux, which is an e_mux
-  ranger_cpu_data_master_readdata <= (((((((((((A_REP(NOT ranger_cpu_data_master_requests_BL_avalon_slave, 32) OR BL_avalon_slave_readdata_from_sa)) AND ((A_REP(NOT ranger_cpu_data_master_requests_BR_avalon_slave, 32) OR BR_avalon_slave_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_TL_avalon_slave, 32) OR TL_avalon_slave_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_TR_avalon_slave, 32) OR TR_avalon_slave_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_control_avalon_slave, 32) OR control_avalon_slave_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_cpu_clock_0_in, 32) OR registered_ranger_cpu_data_master_readdata))) AND ((A_REP(NOT ranger_cpu_data_master_requests_frame_received_s1, 32) OR (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(frame_received_s1_readdata_from_sa)))))) AND ((A_REP(NOT ranger_cpu_data_master_requests_jtag_uart_avalon_jtag_slave, 32) OR registered_ranger_cpu_data_master_readdata))) AND ((A_REP(NOT ranger_cpu_data_master_requests_onchip_mem_s1, 32) OR onchip_mem_s1_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_ranger_cpu_jtag_debug_module, 32) OR ranger_cpu_jtag_debug_module_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_timer_1ms_s1, 32) OR (std_logic_vector'("0000000000000000") & (timer_1ms_s1_readdata_from_sa))));
+  ranger_cpu_data_master_readdata <= ((((((((((((A_REP(NOT ranger_cpu_data_master_requests_BL_avalon_slave, 32) OR BL_avalon_slave_readdata_from_sa)) AND ((A_REP(NOT ranger_cpu_data_master_requests_BR_avalon_slave, 32) OR BR_avalon_slave_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_TL_avalon_slave, 32) OR TL_avalon_slave_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_TR_avalon_slave, 32) OR TR_avalon_slave_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_control_avalon_slave, 32) OR control_avalon_slave_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_cpu_clock_0_in, 32) OR registered_ranger_cpu_data_master_readdata))) AND ((A_REP(NOT ranger_cpu_data_master_requests_frame_received_s1, 32) OR (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(frame_received_s1_readdata_from_sa)))))) AND ((A_REP(NOT ranger_cpu_data_master_requests_jtag_uart_avalon_jtag_slave, 32) OR registered_ranger_cpu_data_master_readdata))) AND ((A_REP(NOT ranger_cpu_data_master_requests_onchip_mem_s1, 32) OR onchip_mem_s1_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_ranger_cpu_jtag_debug_module, 32) OR ranger_cpu_jtag_debug_module_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_sysid_control_slave, 32) OR sysid_control_slave_readdata_from_sa))) AND ((A_REP(NOT ranger_cpu_data_master_requests_timer_1ms_s1, 32) OR (std_logic_vector'("0000000000000000") & (timer_1ms_s1_readdata_from_sa))));
   --actual waitrequest port, which is an e_register
   process (clk, reset_n)
   begin
@@ -3651,7 +3657,7 @@ begin
   --r_2 master_run cascaded wait assignment, which is an e_assign
   r_2 <= Vector_To_Std_Logic(((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_instruction_master_granted_ranger_cpu_jtag_debug_module OR NOT ranger_cpu_instruction_master_qualified_request_ranger_cpu_jtag_debug_module))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_instruction_master_qualified_request_ranger_cpu_jtag_debug_module OR NOT ranger_cpu_instruction_master_read)))) OR (((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(NOT d1_ranger_cpu_jtag_debug_module_end_xfer)))) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_instruction_master_read)))))))));
   --optimize select-logic by passing only those address bits which matter.
-  internal_ranger_cpu_instruction_master_address_to_slave <= Std_Logic_Vector'(A_ToStdLogicVector(std_logic'('1')) & ranger_cpu_instruction_master_address(19 DOWNTO 0));
+  internal_ranger_cpu_instruction_master_address_to_slave <= Std_Logic_Vector'(A_ToStdLogicVector(std_logic'('1')) & ranger_cpu_instruction_master_address(19 DOWNTO 17) & A_ToStdLogicVector(std_logic'('0')) & ranger_cpu_instruction_master_address(15 DOWNTO 0));
   --ranger_cpu_instruction_master_read_but_no_slave_selected assignment, which is an e_register
   process (clk, reset_n)
   begin
@@ -3767,6 +3773,234 @@ begin
           write(output, write_line9.all);
           deallocate (write_line9);
           assert false report "VHDL STOP" severity failure;
+        end if;
+      end if;
+
+    end process;
+
+--synthesis translate_on
+
+end europa;
+
+
+
+-- turn off superfluous VHDL processor warnings 
+-- altera message_level Level1 
+-- altera message_off 10034 10035 10036 10037 10230 10240 10030 
+
+library altera;
+use altera.altera_europa_support_lib.all;
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+
+entity sysid_control_slave_arbitrator is 
+        port (
+              -- inputs:
+                 signal clk : IN STD_LOGIC;
+                 signal ranger_cpu_data_master_address_to_slave : IN STD_LOGIC_VECTOR (20 DOWNTO 0);
+                 signal ranger_cpu_data_master_read : IN STD_LOGIC;
+                 signal ranger_cpu_data_master_write : IN STD_LOGIC;
+                 signal reset_n : IN STD_LOGIC;
+                 signal sysid_control_slave_readdata : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
+
+              -- outputs:
+                 signal d1_sysid_control_slave_end_xfer : OUT STD_LOGIC;
+                 signal ranger_cpu_data_master_granted_sysid_control_slave : OUT STD_LOGIC;
+                 signal ranger_cpu_data_master_qualified_request_sysid_control_slave : OUT STD_LOGIC;
+                 signal ranger_cpu_data_master_read_data_valid_sysid_control_slave : OUT STD_LOGIC;
+                 signal ranger_cpu_data_master_requests_sysid_control_slave : OUT STD_LOGIC;
+                 signal sysid_control_slave_address : OUT STD_LOGIC;
+                 signal sysid_control_slave_readdata_from_sa : OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
+              );
+end entity sysid_control_slave_arbitrator;
+
+
+architecture europa of sysid_control_slave_arbitrator is
+                signal d1_reasons_to_wait :  STD_LOGIC;
+                signal enable_nonzero_assertions :  STD_LOGIC;
+                signal end_xfer_arb_share_counter_term_sysid_control_slave :  STD_LOGIC;
+                signal in_a_read_cycle :  STD_LOGIC;
+                signal in_a_write_cycle :  STD_LOGIC;
+                signal internal_ranger_cpu_data_master_granted_sysid_control_slave :  STD_LOGIC;
+                signal internal_ranger_cpu_data_master_qualified_request_sysid_control_slave :  STD_LOGIC;
+                signal internal_ranger_cpu_data_master_requests_sysid_control_slave :  STD_LOGIC;
+                signal ranger_cpu_data_master_arbiterlock :  STD_LOGIC;
+                signal ranger_cpu_data_master_arbiterlock2 :  STD_LOGIC;
+                signal ranger_cpu_data_master_continuerequest :  STD_LOGIC;
+                signal ranger_cpu_data_master_saved_grant_sysid_control_slave :  STD_LOGIC;
+                signal shifted_address_to_sysid_control_slave_from_ranger_cpu_data_master :  STD_LOGIC_VECTOR (20 DOWNTO 0);
+                signal sysid_control_slave_allgrants :  STD_LOGIC;
+                signal sysid_control_slave_allow_new_arb_cycle :  STD_LOGIC;
+                signal sysid_control_slave_any_bursting_master_saved_grant :  STD_LOGIC;
+                signal sysid_control_slave_any_continuerequest :  STD_LOGIC;
+                signal sysid_control_slave_arb_counter_enable :  STD_LOGIC;
+                signal sysid_control_slave_arb_share_counter :  STD_LOGIC;
+                signal sysid_control_slave_arb_share_counter_next_value :  STD_LOGIC;
+                signal sysid_control_slave_arb_share_set_values :  STD_LOGIC;
+                signal sysid_control_slave_beginbursttransfer_internal :  STD_LOGIC;
+                signal sysid_control_slave_begins_xfer :  STD_LOGIC;
+                signal sysid_control_slave_end_xfer :  STD_LOGIC;
+                signal sysid_control_slave_firsttransfer :  STD_LOGIC;
+                signal sysid_control_slave_grant_vector :  STD_LOGIC;
+                signal sysid_control_slave_in_a_read_cycle :  STD_LOGIC;
+                signal sysid_control_slave_in_a_write_cycle :  STD_LOGIC;
+                signal sysid_control_slave_master_qreq_vector :  STD_LOGIC;
+                signal sysid_control_slave_non_bursting_master_requests :  STD_LOGIC;
+                signal sysid_control_slave_reg_firsttransfer :  STD_LOGIC;
+                signal sysid_control_slave_slavearbiterlockenable :  STD_LOGIC;
+                signal sysid_control_slave_slavearbiterlockenable2 :  STD_LOGIC;
+                signal sysid_control_slave_unreg_firsttransfer :  STD_LOGIC;
+                signal sysid_control_slave_waits_for_read :  STD_LOGIC;
+                signal sysid_control_slave_waits_for_write :  STD_LOGIC;
+                signal wait_for_sysid_control_slave_counter :  STD_LOGIC;
+
+begin
+
+  process (clk, reset_n)
+  begin
+    if reset_n = '0' then
+      d1_reasons_to_wait <= std_logic'('0');
+    elsif clk'event and clk = '1' then
+      if (std_logic_vector'("00000000000000000000000000000001")) /= std_logic_vector'("00000000000000000000000000000000") then 
+        d1_reasons_to_wait <= NOT sysid_control_slave_end_xfer;
+      end if;
+    end if;
+
+  end process;
+
+  sysid_control_slave_begins_xfer <= NOT d1_reasons_to_wait AND (internal_ranger_cpu_data_master_qualified_request_sysid_control_slave);
+  --assign sysid_control_slave_readdata_from_sa = sysid_control_slave_readdata so that symbol knows where to group signals which may go to master only, which is an e_assign
+  sysid_control_slave_readdata_from_sa <= sysid_control_slave_readdata;
+  internal_ranger_cpu_data_master_requests_sysid_control_slave <= ((to_std_logic(((Std_Logic_Vector'(ranger_cpu_data_master_address_to_slave(20 DOWNTO 3) & std_logic_vector'("000")) = std_logic_vector'("101000000000000000000")))) AND ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))) AND ranger_cpu_data_master_read;
+  --sysid_control_slave_arb_share_counter set values, which is an e_mux
+  sysid_control_slave_arb_share_set_values <= std_logic'('1');
+  --sysid_control_slave_non_bursting_master_requests mux, which is an e_mux
+  sysid_control_slave_non_bursting_master_requests <= internal_ranger_cpu_data_master_requests_sysid_control_slave;
+  --sysid_control_slave_any_bursting_master_saved_grant mux, which is an e_mux
+  sysid_control_slave_any_bursting_master_saved_grant <= std_logic'('0');
+  --sysid_control_slave_arb_share_counter_next_value assignment, which is an e_assign
+  sysid_control_slave_arb_share_counter_next_value <= Vector_To_Std_Logic(A_WE_StdLogicVector((std_logic'(sysid_control_slave_firsttransfer) = '1'), (((std_logic_vector'("00000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(sysid_control_slave_arb_share_set_values))) - std_logic_vector'("000000000000000000000000000000001"))), A_WE_StdLogicVector((std_logic'(sysid_control_slave_arb_share_counter) = '1'), (((std_logic_vector'("00000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(sysid_control_slave_arb_share_counter))) - std_logic_vector'("000000000000000000000000000000001"))), std_logic_vector'("000000000000000000000000000000000"))));
+  --sysid_control_slave_allgrants all slave grants, which is an e_mux
+  sysid_control_slave_allgrants <= sysid_control_slave_grant_vector;
+  --sysid_control_slave_end_xfer assignment, which is an e_assign
+  sysid_control_slave_end_xfer <= NOT ((sysid_control_slave_waits_for_read OR sysid_control_slave_waits_for_write));
+  --end_xfer_arb_share_counter_term_sysid_control_slave arb share counter enable term, which is an e_assign
+  end_xfer_arb_share_counter_term_sysid_control_slave <= sysid_control_slave_end_xfer AND (((NOT sysid_control_slave_any_bursting_master_saved_grant OR in_a_read_cycle) OR in_a_write_cycle));
+  --sysid_control_slave_arb_share_counter arbitration counter enable, which is an e_assign
+  sysid_control_slave_arb_counter_enable <= ((end_xfer_arb_share_counter_term_sysid_control_slave AND sysid_control_slave_allgrants)) OR ((end_xfer_arb_share_counter_term_sysid_control_slave AND NOT sysid_control_slave_non_bursting_master_requests));
+  --sysid_control_slave_arb_share_counter counter, which is an e_register
+  process (clk, reset_n)
+  begin
+    if reset_n = '0' then
+      sysid_control_slave_arb_share_counter <= std_logic'('0');
+    elsif clk'event and clk = '1' then
+      if std_logic'(sysid_control_slave_arb_counter_enable) = '1' then 
+        sysid_control_slave_arb_share_counter <= sysid_control_slave_arb_share_counter_next_value;
+      end if;
+    end if;
+
+  end process;
+
+  --sysid_control_slave_slavearbiterlockenable slave enables arbiterlock, which is an e_register
+  process (clk, reset_n)
+  begin
+    if reset_n = '0' then
+      sysid_control_slave_slavearbiterlockenable <= std_logic'('0');
+    elsif clk'event and clk = '1' then
+      if std_logic'((((sysid_control_slave_master_qreq_vector AND end_xfer_arb_share_counter_term_sysid_control_slave)) OR ((end_xfer_arb_share_counter_term_sysid_control_slave AND NOT sysid_control_slave_non_bursting_master_requests)))) = '1' then 
+        sysid_control_slave_slavearbiterlockenable <= sysid_control_slave_arb_share_counter_next_value;
+      end if;
+    end if;
+
+  end process;
+
+  --ranger_cpu/data_master sysid/control_slave arbiterlock, which is an e_assign
+  ranger_cpu_data_master_arbiterlock <= sysid_control_slave_slavearbiterlockenable AND ranger_cpu_data_master_continuerequest;
+  --sysid_control_slave_slavearbiterlockenable2 slave enables arbiterlock2, which is an e_assign
+  sysid_control_slave_slavearbiterlockenable2 <= sysid_control_slave_arb_share_counter_next_value;
+  --ranger_cpu/data_master sysid/control_slave arbiterlock2, which is an e_assign
+  ranger_cpu_data_master_arbiterlock2 <= sysid_control_slave_slavearbiterlockenable2 AND ranger_cpu_data_master_continuerequest;
+  --sysid_control_slave_any_continuerequest at least one master continues requesting, which is an e_assign
+  sysid_control_slave_any_continuerequest <= std_logic'('1');
+  --ranger_cpu_data_master_continuerequest continued request, which is an e_assign
+  ranger_cpu_data_master_continuerequest <= std_logic'('1');
+  internal_ranger_cpu_data_master_qualified_request_sysid_control_slave <= internal_ranger_cpu_data_master_requests_sysid_control_slave;
+  --master is always granted when requested
+  internal_ranger_cpu_data_master_granted_sysid_control_slave <= internal_ranger_cpu_data_master_qualified_request_sysid_control_slave;
+  --ranger_cpu/data_master saved-grant sysid/control_slave, which is an e_assign
+  ranger_cpu_data_master_saved_grant_sysid_control_slave <= internal_ranger_cpu_data_master_requests_sysid_control_slave;
+  --allow new arb cycle for sysid/control_slave, which is an e_assign
+  sysid_control_slave_allow_new_arb_cycle <= std_logic'('1');
+  --placeholder chosen master
+  sysid_control_slave_grant_vector <= std_logic'('1');
+  --placeholder vector of master qualified-requests
+  sysid_control_slave_master_qreq_vector <= std_logic'('1');
+  --sysid_control_slave_firsttransfer first transaction, which is an e_assign
+  sysid_control_slave_firsttransfer <= A_WE_StdLogic((std_logic'(sysid_control_slave_begins_xfer) = '1'), sysid_control_slave_unreg_firsttransfer, sysid_control_slave_reg_firsttransfer);
+  --sysid_control_slave_unreg_firsttransfer first transaction, which is an e_assign
+  sysid_control_slave_unreg_firsttransfer <= NOT ((sysid_control_slave_slavearbiterlockenable AND sysid_control_slave_any_continuerequest));
+  --sysid_control_slave_reg_firsttransfer first transaction, which is an e_register
+  process (clk, reset_n)
+  begin
+    if reset_n = '0' then
+      sysid_control_slave_reg_firsttransfer <= std_logic'('1');
+    elsif clk'event and clk = '1' then
+      if std_logic'(sysid_control_slave_begins_xfer) = '1' then 
+        sysid_control_slave_reg_firsttransfer <= sysid_control_slave_unreg_firsttransfer;
+      end if;
+    end if;
+
+  end process;
+
+  --sysid_control_slave_beginbursttransfer_internal begin burst transfer, which is an e_assign
+  sysid_control_slave_beginbursttransfer_internal <= sysid_control_slave_begins_xfer;
+  shifted_address_to_sysid_control_slave_from_ranger_cpu_data_master <= ranger_cpu_data_master_address_to_slave;
+  --sysid_control_slave_address mux, which is an e_mux
+  sysid_control_slave_address <= Vector_To_Std_Logic(A_SRL(shifted_address_to_sysid_control_slave_from_ranger_cpu_data_master,std_logic_vector'("00000000000000000000000000000010")));
+  --d1_sysid_control_slave_end_xfer register, which is an e_register
+  process (clk, reset_n)
+  begin
+    if reset_n = '0' then
+      d1_sysid_control_slave_end_xfer <= std_logic'('1');
+    elsif clk'event and clk = '1' then
+      if (std_logic_vector'("00000000000000000000000000000001")) /= std_logic_vector'("00000000000000000000000000000000") then 
+        d1_sysid_control_slave_end_xfer <= sysid_control_slave_end_xfer;
+      end if;
+    end if;
+
+  end process;
+
+  --sysid_control_slave_waits_for_read in a cycle, which is an e_mux
+  sysid_control_slave_waits_for_read <= sysid_control_slave_in_a_read_cycle AND sysid_control_slave_begins_xfer;
+  --sysid_control_slave_in_a_read_cycle assignment, which is an e_assign
+  sysid_control_slave_in_a_read_cycle <= internal_ranger_cpu_data_master_granted_sysid_control_slave AND ranger_cpu_data_master_read;
+  --in_a_read_cycle assignment, which is an e_mux
+  in_a_read_cycle <= sysid_control_slave_in_a_read_cycle;
+  --sysid_control_slave_waits_for_write in a cycle, which is an e_mux
+  sysid_control_slave_waits_for_write <= Vector_To_Std_Logic(((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(sysid_control_slave_in_a_write_cycle))) AND std_logic_vector'("00000000000000000000000000000000")));
+  --sysid_control_slave_in_a_write_cycle assignment, which is an e_assign
+  sysid_control_slave_in_a_write_cycle <= internal_ranger_cpu_data_master_granted_sysid_control_slave AND ranger_cpu_data_master_write;
+  --in_a_write_cycle assignment, which is an e_mux
+  in_a_write_cycle <= sysid_control_slave_in_a_write_cycle;
+  wait_for_sysid_control_slave_counter <= std_logic'('0');
+  --vhdl renameroo for output signals
+  ranger_cpu_data_master_granted_sysid_control_slave <= internal_ranger_cpu_data_master_granted_sysid_control_slave;
+  --vhdl renameroo for output signals
+  ranger_cpu_data_master_qualified_request_sysid_control_slave <= internal_ranger_cpu_data_master_qualified_request_sysid_control_slave;
+  --vhdl renameroo for output signals
+  ranger_cpu_data_master_requests_sysid_control_slave <= internal_ranger_cpu_data_master_requests_sysid_control_slave;
+--synthesis translate_off
+    --sysid/control_slave enable non-zero assertions, which is an e_register
+    process (clk, reset_n)
+    begin
+      if reset_n = '0' then
+        enable_nonzero_assertions <= std_logic'('0');
+      elsif clk'event and clk = '1' then
+        if (std_logic_vector'("00000000000000000000000000000001")) /= std_logic_vector'("00000000000000000000000000000000") then 
+          enable_nonzero_assertions <= std_logic'('1');
         end if;
       end if;
 
@@ -4676,7 +4910,7 @@ component onchip_mem_s1_arbitrator is
 
                  -- outputs:
                     signal d1_onchip_mem_s1_end_xfer : OUT STD_LOGIC;
-                    signal onchip_mem_s1_address : OUT STD_LOGIC_VECTOR (14 DOWNTO 0);
+                    signal onchip_mem_s1_address : OUT STD_LOGIC_VECTOR (13 DOWNTO 0);
                     signal onchip_mem_s1_byteenable : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
                     signal onchip_mem_s1_chipselect : OUT STD_LOGIC;
                     signal onchip_mem_s1_clken : OUT STD_LOGIC;
@@ -4698,7 +4932,7 @@ end component onchip_mem_s1_arbitrator;
 component onchip_mem is 
            port (
                  -- inputs:
-                    signal address : IN STD_LOGIC_VECTOR (14 DOWNTO 0);
+                    signal address : IN STD_LOGIC_VECTOR (13 DOWNTO 0);
                     signal byteenable : IN STD_LOGIC_VECTOR (3 DOWNTO 0);
                     signal chipselect : IN STD_LOGIC;
                     signal clk : IN STD_LOGIC;
@@ -4822,6 +5056,7 @@ component ranger_cpu_data_master_arbitrator is
                     signal d1_jtag_uart_avalon_jtag_slave_end_xfer : IN STD_LOGIC;
                     signal d1_onchip_mem_s1_end_xfer : IN STD_LOGIC;
                     signal d1_ranger_cpu_jtag_debug_module_end_xfer : IN STD_LOGIC;
+                    signal d1_sysid_control_slave_end_xfer : IN STD_LOGIC;
                     signal d1_timer_1ms_s1_end_xfer : IN STD_LOGIC;
                     signal frame_received_s1_irq_from_sa : IN STD_LOGIC;
                     signal frame_received_s1_readdata_from_sa : IN STD_LOGIC;
@@ -4840,6 +5075,7 @@ component ranger_cpu_data_master_arbitrator is
                     signal ranger_cpu_data_master_granted_jtag_uart_avalon_jtag_slave : IN STD_LOGIC;
                     signal ranger_cpu_data_master_granted_onchip_mem_s1 : IN STD_LOGIC;
                     signal ranger_cpu_data_master_granted_ranger_cpu_jtag_debug_module : IN STD_LOGIC;
+                    signal ranger_cpu_data_master_granted_sysid_control_slave : IN STD_LOGIC;
                     signal ranger_cpu_data_master_granted_timer_1ms_s1 : IN STD_LOGIC;
                     signal ranger_cpu_data_master_qualified_request_BL_avalon_slave : IN STD_LOGIC;
                     signal ranger_cpu_data_master_qualified_request_BR_avalon_slave : IN STD_LOGIC;
@@ -4851,6 +5087,7 @@ component ranger_cpu_data_master_arbitrator is
                     signal ranger_cpu_data_master_qualified_request_jtag_uart_avalon_jtag_slave : IN STD_LOGIC;
                     signal ranger_cpu_data_master_qualified_request_onchip_mem_s1 : IN STD_LOGIC;
                     signal ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module : IN STD_LOGIC;
+                    signal ranger_cpu_data_master_qualified_request_sysid_control_slave : IN STD_LOGIC;
                     signal ranger_cpu_data_master_qualified_request_timer_1ms_s1 : IN STD_LOGIC;
                     signal ranger_cpu_data_master_read : IN STD_LOGIC;
                     signal ranger_cpu_data_master_read_data_valid_BL_avalon_slave : IN STD_LOGIC;
@@ -4863,6 +5100,7 @@ component ranger_cpu_data_master_arbitrator is
                     signal ranger_cpu_data_master_read_data_valid_jtag_uart_avalon_jtag_slave : IN STD_LOGIC;
                     signal ranger_cpu_data_master_read_data_valid_onchip_mem_s1 : IN STD_LOGIC;
                     signal ranger_cpu_data_master_read_data_valid_ranger_cpu_jtag_debug_module : IN STD_LOGIC;
+                    signal ranger_cpu_data_master_read_data_valid_sysid_control_slave : IN STD_LOGIC;
                     signal ranger_cpu_data_master_read_data_valid_timer_1ms_s1 : IN STD_LOGIC;
                     signal ranger_cpu_data_master_requests_BL_avalon_slave : IN STD_LOGIC;
                     signal ranger_cpu_data_master_requests_BR_avalon_slave : IN STD_LOGIC;
@@ -4874,6 +5112,7 @@ component ranger_cpu_data_master_arbitrator is
                     signal ranger_cpu_data_master_requests_jtag_uart_avalon_jtag_slave : IN STD_LOGIC;
                     signal ranger_cpu_data_master_requests_onchip_mem_s1 : IN STD_LOGIC;
                     signal ranger_cpu_data_master_requests_ranger_cpu_jtag_debug_module : IN STD_LOGIC;
+                    signal ranger_cpu_data_master_requests_sysid_control_slave : IN STD_LOGIC;
                     signal ranger_cpu_data_master_requests_timer_1ms_s1 : IN STD_LOGIC;
                     signal ranger_cpu_data_master_write : IN STD_LOGIC;
                     signal ranger_cpu_jtag_debug_module_readdata_from_sa : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
@@ -4884,6 +5123,7 @@ component ranger_cpu_data_master_arbitrator is
                     signal registered_ranger_cpu_data_master_read_data_valid_control_avalon_slave : IN STD_LOGIC;
                     signal registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1 : IN STD_LOGIC;
                     signal reset_n : IN STD_LOGIC;
+                    signal sysid_control_slave_readdata_from_sa : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
                     signal timer_1ms_s1_irq_from_sa : IN STD_LOGIC;
                     signal timer_1ms_s1_readdata_from_sa : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
 
@@ -4958,6 +5198,37 @@ component ranger_cpu is
                     signal jtag_debug_module_resetrequest : OUT STD_LOGIC
                  );
 end component ranger_cpu;
+
+component sysid_control_slave_arbitrator is 
+           port (
+                 -- inputs:
+                    signal clk : IN STD_LOGIC;
+                    signal ranger_cpu_data_master_address_to_slave : IN STD_LOGIC_VECTOR (20 DOWNTO 0);
+                    signal ranger_cpu_data_master_read : IN STD_LOGIC;
+                    signal ranger_cpu_data_master_write : IN STD_LOGIC;
+                    signal reset_n : IN STD_LOGIC;
+                    signal sysid_control_slave_readdata : IN STD_LOGIC_VECTOR (31 DOWNTO 0);
+
+                 -- outputs:
+                    signal d1_sysid_control_slave_end_xfer : OUT STD_LOGIC;
+                    signal ranger_cpu_data_master_granted_sysid_control_slave : OUT STD_LOGIC;
+                    signal ranger_cpu_data_master_qualified_request_sysid_control_slave : OUT STD_LOGIC;
+                    signal ranger_cpu_data_master_read_data_valid_sysid_control_slave : OUT STD_LOGIC;
+                    signal ranger_cpu_data_master_requests_sysid_control_slave : OUT STD_LOGIC;
+                    signal sysid_control_slave_address : OUT STD_LOGIC;
+                    signal sysid_control_slave_readdata_from_sa : OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
+                 );
+end component sysid_control_slave_arbitrator;
+
+component sysid is 
+           port (
+                 -- inputs:
+                    signal address : IN STD_LOGIC;
+
+                 -- outputs:
+                    signal readdata : OUT STD_LOGIC_VECTOR (31 DOWNTO 0)
+                 );
+end component sysid;
 
 component timer_1ms_s1_arbitrator is 
            port (
@@ -5104,6 +5375,7 @@ end component cpu_reset_clk50_domain_synch_module;
                 signal d1_onchip_mem_s1_end_xfer :  STD_LOGIC;
                 signal d1_pll_s1_end_xfer :  STD_LOGIC;
                 signal d1_ranger_cpu_jtag_debug_module_end_xfer :  STD_LOGIC;
+                signal d1_sysid_control_slave_end_xfer :  STD_LOGIC;
                 signal d1_timer_1ms_s1_end_xfer :  STD_LOGIC;
                 signal frame_received_s1_address :  STD_LOGIC_VECTOR (1 DOWNTO 0);
                 signal frame_received_s1_chipselect :  STD_LOGIC;
@@ -5163,7 +5435,7 @@ end component cpu_reset_clk50_domain_synch_module;
                 signal jtag_uart_avalon_jtag_slave_writedata :  STD_LOGIC_VECTOR (31 DOWNTO 0);
                 signal module_input :  STD_LOGIC;
                 signal module_input1 :  STD_LOGIC;
-                signal onchip_mem_s1_address :  STD_LOGIC_VECTOR (14 DOWNTO 0);
+                signal onchip_mem_s1_address :  STD_LOGIC_VECTOR (13 DOWNTO 0);
                 signal onchip_mem_s1_byteenable :  STD_LOGIC_VECTOR (3 DOWNTO 0);
                 signal onchip_mem_s1_chipselect :  STD_LOGIC;
                 signal onchip_mem_s1_clken :  STD_LOGIC;
@@ -5196,6 +5468,7 @@ end component cpu_reset_clk50_domain_synch_module;
                 signal ranger_cpu_data_master_granted_jtag_uart_avalon_jtag_slave :  STD_LOGIC;
                 signal ranger_cpu_data_master_granted_onchip_mem_s1 :  STD_LOGIC;
                 signal ranger_cpu_data_master_granted_ranger_cpu_jtag_debug_module :  STD_LOGIC;
+                signal ranger_cpu_data_master_granted_sysid_control_slave :  STD_LOGIC;
                 signal ranger_cpu_data_master_granted_timer_1ms_s1 :  STD_LOGIC;
                 signal ranger_cpu_data_master_irq :  STD_LOGIC_VECTOR (31 DOWNTO 0);
                 signal ranger_cpu_data_master_qualified_request_BL_avalon_slave :  STD_LOGIC;
@@ -5208,6 +5481,7 @@ end component cpu_reset_clk50_domain_synch_module;
                 signal ranger_cpu_data_master_qualified_request_jtag_uart_avalon_jtag_slave :  STD_LOGIC;
                 signal ranger_cpu_data_master_qualified_request_onchip_mem_s1 :  STD_LOGIC;
                 signal ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module :  STD_LOGIC;
+                signal ranger_cpu_data_master_qualified_request_sysid_control_slave :  STD_LOGIC;
                 signal ranger_cpu_data_master_qualified_request_timer_1ms_s1 :  STD_LOGIC;
                 signal ranger_cpu_data_master_read :  STD_LOGIC;
                 signal ranger_cpu_data_master_read_data_valid_BL_avalon_slave :  STD_LOGIC;
@@ -5220,6 +5494,7 @@ end component cpu_reset_clk50_domain_synch_module;
                 signal ranger_cpu_data_master_read_data_valid_jtag_uart_avalon_jtag_slave :  STD_LOGIC;
                 signal ranger_cpu_data_master_read_data_valid_onchip_mem_s1 :  STD_LOGIC;
                 signal ranger_cpu_data_master_read_data_valid_ranger_cpu_jtag_debug_module :  STD_LOGIC;
+                signal ranger_cpu_data_master_read_data_valid_sysid_control_slave :  STD_LOGIC;
                 signal ranger_cpu_data_master_read_data_valid_timer_1ms_s1 :  STD_LOGIC;
                 signal ranger_cpu_data_master_readdata :  STD_LOGIC_VECTOR (31 DOWNTO 0);
                 signal ranger_cpu_data_master_requests_BL_avalon_slave :  STD_LOGIC;
@@ -5232,6 +5507,7 @@ end component cpu_reset_clk50_domain_synch_module;
                 signal ranger_cpu_data_master_requests_jtag_uart_avalon_jtag_slave :  STD_LOGIC;
                 signal ranger_cpu_data_master_requests_onchip_mem_s1 :  STD_LOGIC;
                 signal ranger_cpu_data_master_requests_ranger_cpu_jtag_debug_module :  STD_LOGIC;
+                signal ranger_cpu_data_master_requests_sysid_control_slave :  STD_LOGIC;
                 signal ranger_cpu_data_master_requests_timer_1ms_s1 :  STD_LOGIC;
                 signal ranger_cpu_data_master_waitrequest :  STD_LOGIC;
                 signal ranger_cpu_data_master_write :  STD_LOGIC;
@@ -5271,6 +5547,9 @@ end component cpu_reset_clk50_domain_synch_module;
                 signal registered_ranger_cpu_data_master_read_data_valid_control_avalon_slave :  STD_LOGIC;
                 signal registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1 :  STD_LOGIC;
                 signal reset_n_sources :  STD_LOGIC;
+                signal sysid_control_slave_address :  STD_LOGIC;
+                signal sysid_control_slave_readdata :  STD_LOGIC_VECTOR (31 DOWNTO 0);
+                signal sysid_control_slave_readdata_from_sa :  STD_LOGIC_VECTOR (31 DOWNTO 0);
                 signal timer_1ms_s1_address :  STD_LOGIC_VECTOR (2 DOWNTO 0);
                 signal timer_1ms_s1_chipselect :  STD_LOGIC;
                 signal timer_1ms_s1_irq :  STD_LOGIC;
@@ -5849,6 +6128,7 @@ begin
       d1_jtag_uart_avalon_jtag_slave_end_xfer => d1_jtag_uart_avalon_jtag_slave_end_xfer,
       d1_onchip_mem_s1_end_xfer => d1_onchip_mem_s1_end_xfer,
       d1_ranger_cpu_jtag_debug_module_end_xfer => d1_ranger_cpu_jtag_debug_module_end_xfer,
+      d1_sysid_control_slave_end_xfer => d1_sysid_control_slave_end_xfer,
       d1_timer_1ms_s1_end_xfer => d1_timer_1ms_s1_end_xfer,
       frame_received_s1_irq_from_sa => frame_received_s1_irq_from_sa,
       frame_received_s1_readdata_from_sa => frame_received_s1_readdata_from_sa,
@@ -5867,6 +6147,7 @@ begin
       ranger_cpu_data_master_granted_jtag_uart_avalon_jtag_slave => ranger_cpu_data_master_granted_jtag_uart_avalon_jtag_slave,
       ranger_cpu_data_master_granted_onchip_mem_s1 => ranger_cpu_data_master_granted_onchip_mem_s1,
       ranger_cpu_data_master_granted_ranger_cpu_jtag_debug_module => ranger_cpu_data_master_granted_ranger_cpu_jtag_debug_module,
+      ranger_cpu_data_master_granted_sysid_control_slave => ranger_cpu_data_master_granted_sysid_control_slave,
       ranger_cpu_data_master_granted_timer_1ms_s1 => ranger_cpu_data_master_granted_timer_1ms_s1,
       ranger_cpu_data_master_qualified_request_BL_avalon_slave => ranger_cpu_data_master_qualified_request_BL_avalon_slave,
       ranger_cpu_data_master_qualified_request_BR_avalon_slave => ranger_cpu_data_master_qualified_request_BR_avalon_slave,
@@ -5878,6 +6159,7 @@ begin
       ranger_cpu_data_master_qualified_request_jtag_uart_avalon_jtag_slave => ranger_cpu_data_master_qualified_request_jtag_uart_avalon_jtag_slave,
       ranger_cpu_data_master_qualified_request_onchip_mem_s1 => ranger_cpu_data_master_qualified_request_onchip_mem_s1,
       ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module => ranger_cpu_data_master_qualified_request_ranger_cpu_jtag_debug_module,
+      ranger_cpu_data_master_qualified_request_sysid_control_slave => ranger_cpu_data_master_qualified_request_sysid_control_slave,
       ranger_cpu_data_master_qualified_request_timer_1ms_s1 => ranger_cpu_data_master_qualified_request_timer_1ms_s1,
       ranger_cpu_data_master_read => ranger_cpu_data_master_read,
       ranger_cpu_data_master_read_data_valid_BL_avalon_slave => ranger_cpu_data_master_read_data_valid_BL_avalon_slave,
@@ -5890,6 +6172,7 @@ begin
       ranger_cpu_data_master_read_data_valid_jtag_uart_avalon_jtag_slave => ranger_cpu_data_master_read_data_valid_jtag_uart_avalon_jtag_slave,
       ranger_cpu_data_master_read_data_valid_onchip_mem_s1 => ranger_cpu_data_master_read_data_valid_onchip_mem_s1,
       ranger_cpu_data_master_read_data_valid_ranger_cpu_jtag_debug_module => ranger_cpu_data_master_read_data_valid_ranger_cpu_jtag_debug_module,
+      ranger_cpu_data_master_read_data_valid_sysid_control_slave => ranger_cpu_data_master_read_data_valid_sysid_control_slave,
       ranger_cpu_data_master_read_data_valid_timer_1ms_s1 => ranger_cpu_data_master_read_data_valid_timer_1ms_s1,
       ranger_cpu_data_master_requests_BL_avalon_slave => ranger_cpu_data_master_requests_BL_avalon_slave,
       ranger_cpu_data_master_requests_BR_avalon_slave => ranger_cpu_data_master_requests_BR_avalon_slave,
@@ -5901,6 +6184,7 @@ begin
       ranger_cpu_data_master_requests_jtag_uart_avalon_jtag_slave => ranger_cpu_data_master_requests_jtag_uart_avalon_jtag_slave,
       ranger_cpu_data_master_requests_onchip_mem_s1 => ranger_cpu_data_master_requests_onchip_mem_s1,
       ranger_cpu_data_master_requests_ranger_cpu_jtag_debug_module => ranger_cpu_data_master_requests_ranger_cpu_jtag_debug_module,
+      ranger_cpu_data_master_requests_sysid_control_slave => ranger_cpu_data_master_requests_sysid_control_slave,
       ranger_cpu_data_master_requests_timer_1ms_s1 => ranger_cpu_data_master_requests_timer_1ms_s1,
       ranger_cpu_data_master_write => ranger_cpu_data_master_write,
       ranger_cpu_jtag_debug_module_readdata_from_sa => ranger_cpu_jtag_debug_module_readdata_from_sa,
@@ -5911,6 +6195,7 @@ begin
       registered_ranger_cpu_data_master_read_data_valid_control_avalon_slave => registered_ranger_cpu_data_master_read_data_valid_control_avalon_slave,
       registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1 => registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1,
       reset_n => clk100_reset_n,
+      sysid_control_slave_readdata_from_sa => sysid_control_slave_readdata_from_sa,
       timer_1ms_s1_irq_from_sa => timer_1ms_s1_irq_from_sa,
       timer_1ms_s1_readdata_from_sa => timer_1ms_s1_readdata_from_sa
     );
@@ -5973,6 +6258,33 @@ begin
       jtag_debug_module_write => ranger_cpu_jtag_debug_module_write,
       jtag_debug_module_writedata => ranger_cpu_jtag_debug_module_writedata,
       reset_n => ranger_cpu_jtag_debug_module_reset_n
+    );
+
+
+  --the_sysid_control_slave, which is an e_instance
+  the_sysid_control_slave : sysid_control_slave_arbitrator
+    port map(
+      d1_sysid_control_slave_end_xfer => d1_sysid_control_slave_end_xfer,
+      ranger_cpu_data_master_granted_sysid_control_slave => ranger_cpu_data_master_granted_sysid_control_slave,
+      ranger_cpu_data_master_qualified_request_sysid_control_slave => ranger_cpu_data_master_qualified_request_sysid_control_slave,
+      ranger_cpu_data_master_read_data_valid_sysid_control_slave => ranger_cpu_data_master_read_data_valid_sysid_control_slave,
+      ranger_cpu_data_master_requests_sysid_control_slave => ranger_cpu_data_master_requests_sysid_control_slave,
+      sysid_control_slave_address => sysid_control_slave_address,
+      sysid_control_slave_readdata_from_sa => sysid_control_slave_readdata_from_sa,
+      clk => internal_clk100,
+      ranger_cpu_data_master_address_to_slave => ranger_cpu_data_master_address_to_slave,
+      ranger_cpu_data_master_read => ranger_cpu_data_master_read,
+      ranger_cpu_data_master_write => ranger_cpu_data_master_write,
+      reset_n => clk100_reset_n,
+      sysid_control_slave_readdata => sysid_control_slave_readdata
+    );
+
+
+  --the_sysid, which is an e_ptf_instance
+  the_sysid : sysid
+    port map(
+      readdata => sysid_control_slave_readdata,
+      address => sysid_control_slave_address
     );
 
 

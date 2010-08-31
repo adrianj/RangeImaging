@@ -339,9 +339,9 @@ END SYN;
 -- Retrieval info: CONNECT: @inclk 0 0 1 1 GND 0 0 0 0
 -- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll.vhd TRUE FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll.ppf TRUE FALSE
--- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll.inc TRUE FALSE
--- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll.cmp TRUE FALSE
--- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll.bsf TRUE FALSE
+-- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll.inc FALSE FALSE
+-- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll.cmp FALSE FALSE
+-- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll.bsf FALSE FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll_inst.vhd FALSE FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll_waveforms.html TRUE FALSE
 -- Retrieval info: GEN_FILE: TYPE_NORMAL altpllpll_wave*.jpg FALSE FALSE
