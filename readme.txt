@@ -17,9 +17,15 @@ Also - here are some reminders to myself about how to use Git:
 
 git add <file> : Adds files to repositories. Be careful when adding directories, since it adds all files in the directory. Better to go into the directory and add only files with matching patterns, eg, "git add *.vhd"
 
-git commit -m "message" : Commits changes to all modified files. Without the -m "message" it opens up VIM asking for a message. Quitting is not intuitive - type "<esc> :wq" to save and quit. There must surely be an easier way!!
+git commit -a -m "message" : Commits changes to all modified files. Without the -m "message" it opens up VIM asking for a message. Quitting is not intuitive - type "<esc> :wq" to save and quit. There must surely be an easier way!!
 
 git push : pushes commited changes to github.
 
 git --help
-git <command> --help :  Gives help info for git and git commands (eg, commit, add, etc.
+git <command> --help.  Gives help info for git and git commands (eg, commit, add, etc.)
+
+git pull origin master : Fetches and merges changes from origin (the web hosted version) into master (my local version).
+
+git fetch origin
+git merge origin/master  :  These two commands do the same as 'git pull origin master', but gives more info about any conflicts.
+
