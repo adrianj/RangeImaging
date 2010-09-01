@@ -27,4 +27,4 @@ git <command> --help.  Gives help info for git and git commands (eg, commit, add
 git pull origin master : Fetches and merges changes from origin (the web hosted version) into master (my local version).
 
 git fetch origin	: followed by...
-git merge origin/master  :  These two commands do the same as 'git pull origin master', but so far I haven't had much luck with the automerging of conflicts, eg, within this readme file.
+git merge origin/master  :  These two commands do the same as 'git pull origin master', but doing the fetch seperately can be less confusing if a conflict results.
