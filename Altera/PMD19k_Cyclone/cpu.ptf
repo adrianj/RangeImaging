@@ -536,7 +536,7 @@ SYSTEM cpu
             PORT address
             {
                type = "address";
-               width = "14";
+               width = "15";
                direction = "input";
                Is_Enabled = "1";
             }
@@ -609,7 +609,7 @@ SYSTEM cpu
             Address_Alignment = "dynamic";
             Well_Behaved_Waitrequest = "0";
             Is_Nonvolatile_Storage = "0";
-            Address_Span = "65536";
+            Address_Span = "81920";
             Read_Latency = "1";
             Is_Memory_Device = "1";
             Maximum_Pending_Read_Transactions = "0";
@@ -618,7 +618,7 @@ SYSTEM cpu
             Write_Latency = "0";
             Is_Flash = "0";
             Data_Width = "32";
-            Address_Width = "14";
+            Address_Width = "15";
             Maximum_Burst_Size = "1";
             Register_Incoming_Signals = "0";
             Register_Outgoing_Signals = "0";
@@ -659,7 +659,7 @@ SYSTEM cpu
          gui_ram_block_type = "Automatic";
          Writeable = "1";
          dual_port = "0";
-         Size_Value = "65536";
+         Size_Value = "81920";
          Size_Multiple = "1";
          use_shallow_mem_blocks = "0";
          init_mem_content = "1";
@@ -683,7 +683,7 @@ SYSTEM cpu
                onchip_mem 
                {
                   Command1 = "@echo Post-processing to create $(notdir $@)";
-                  Command2 = "elf2hex $(ELF) 0x00160000 0x16FFFF --width=32 $(QUARTUS_PROJECT_DIR)/onchip_mem.hex --create-lanes=0 ";
+                  Command2 = "elf2hex $(ELF) 0x00160000 0x173FFF --width=32 $(QUARTUS_PROJECT_DIR)/onchip_mem.hex --create-lanes=0 ";
                   Dependency = "$(ELF)";
                   Target_File = "$(QUARTUS_PROJECT_DIR)/onchip_mem.hex";
                }
@@ -776,12 +776,12 @@ SYSTEM cpu
             Is_Memory_Device = "1";
             Address_Group = "0";
             Address_Alignment = "dynamic";
-            Address_Width = "14";
+            Address_Width = "15";
             Data_Width = "32";
             Has_IRQ = "0";
             Read_Wait_States = "0";
             Write_Wait_States = "0";
-            Address_Span = "65536";
+            Address_Span = "81920";
             Read_Latency = "1";
             Is_Channel = "1";
             Is_Enabled = "0";
@@ -887,7 +887,7 @@ SYSTEM cpu
             Entry onchip_mem/s1
             {
                address = "0x00160000";
-               span = "0x00010000";
+               span = "0x00014000";
                is_bridge = "0";
             }
          }
@@ -1258,7 +1258,7 @@ SYSTEM cpu
             Entry onchip_mem/s1
             {
                address = "0x00160000";
-               span = "0x00010000";
+               span = "0x00014000";
                is_bridge = "0";
             }
             Entry control/avalon_slave
@@ -1311,7 +1311,7 @@ SYSTEM cpu
             }
             Entry sysid/control_slave
             {
-               address = "0x00140000";
+               address = "0x00181058";
                span = "0x00000008";
                is_bridge = "0";
             }
@@ -3685,9 +3685,9 @@ SYSTEM cpu
             MASTERED_BY ranger_cpu/data_master
             {
                priority = "1";
-               Offset_Address = "0x00140000";
+               Offset_Address = "0x00181058";
             }
-            Base_Address = "0x00140000";
+            Base_Address = "0x00181058";
             Has_IRQ = "0";
             Address_Group = "0";
             IRQ_MASTER ranger_cpu/data_master
@@ -3709,7 +3709,7 @@ SYSTEM cpu
          Has_Clock = "1";
          View 
          {
-            Settings_Summary = "System ID (at last Generate):<br> <b>12FC5429</b>    (unique ID tag) <br> <b>4C7D80BA</b> (timestamp: Wed Sep 1, 2010 @10:22 AM)";
+            Settings_Summary = "System ID (at last Generate):<br> <b>572AAC66</b>    (unique ID tag) <br> <b>4C7D9506</b> (timestamp: Wed Sep 1, 2010 @11:49 AM)";
             MESSAGES 
             {
             }
@@ -3717,8 +3717,8 @@ SYSTEM cpu
       }
       WIZARD_SCRIPT_ARGUMENTS 
       {
-         id = "318526505u";
-         timestamp = "1283293370u";
+         id = "1462414438u";
+         timestamp = "1283298566u";
          regenerate_values = "0";
          MAKE 
          {
@@ -3727,7 +3727,7 @@ SYSTEM cpu
                verifysysid 
                {
                   All_Depends_On = "0";
-                  Command = "nios2-download $(JTAG_CABLE)                                --sidp=0x00140000 --id=318526505 --timestamp=1283293370";
+                  Command = "nios2-download $(JTAG_CABLE)                                --sidp=0x00181058 --id=1462414438 --timestamp=1283298566";
                   Is_Phony = "1";
                   Target_File = "dummy_verifysysid_file";
                }

@@ -2361,7 +2361,7 @@ entity onchip_mem_s1_arbitrator is
 
               -- outputs:
                  signal d1_onchip_mem_s1_end_xfer : OUT STD_LOGIC;
-                 signal onchip_mem_s1_address : OUT STD_LOGIC_VECTOR (13 DOWNTO 0);
+                 signal onchip_mem_s1_address : OUT STD_LOGIC_VECTOR (14 DOWNTO 0);
                  signal onchip_mem_s1_byteenable : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
                  signal onchip_mem_s1_chipselect : OUT STD_LOGIC;
                  signal onchip_mem_s1_clken : OUT STD_LOGIC;
@@ -2459,7 +2459,7 @@ begin
   onchip_mem_s1_begins_xfer <= NOT d1_reasons_to_wait AND ((internal_ranger_cpu_data_master_qualified_request_onchip_mem_s1 OR internal_ranger_cpu_instruction_master_qualified_request_onchip_mem_s1));
   --assign onchip_mem_s1_readdata_from_sa = onchip_mem_s1_readdata so that symbol knows where to group signals which may go to master only, which is an e_assign
   onchip_mem_s1_readdata_from_sa <= onchip_mem_s1_readdata;
-  internal_ranger_cpu_data_master_requests_onchip_mem_s1 <= to_std_logic(((Std_Logic_Vector'(ranger_cpu_data_master_address_to_slave(20 DOWNTO 16) & std_logic_vector'("0000000000000000")) = std_logic_vector'("101100000000000000000")))) AND ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write));
+  internal_ranger_cpu_data_master_requests_onchip_mem_s1 <= to_std_logic(((Std_Logic_Vector'(ranger_cpu_data_master_address_to_slave(20 DOWNTO 17) & std_logic_vector'("00000000000000000")) = std_logic_vector'("101100000000000000000")))) AND ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write));
   --registered rdv signal_name registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1 assignment, which is an e_assign
   registered_ranger_cpu_data_master_read_data_valid_onchip_mem_s1 <= ranger_cpu_data_master_read_data_valid_onchip_mem_s1_shift_register_in;
   --onchip_mem_s1_arb_share_counter set values, which is an e_mux
@@ -2555,7 +2555,7 @@ begin
   onchip_mem_s1_writedata <= ranger_cpu_data_master_writedata;
   --mux onchip_mem_s1_clken, which is an e_mux
   onchip_mem_s1_clken <= std_logic'('1');
-  internal_ranger_cpu_instruction_master_requests_onchip_mem_s1 <= ((to_std_logic(((Std_Logic_Vector'(ranger_cpu_instruction_master_address_to_slave(20 DOWNTO 16) & std_logic_vector'("0000000000000000")) = std_logic_vector'("101100000000000000000")))) AND (ranger_cpu_instruction_master_read))) AND ranger_cpu_instruction_master_read;
+  internal_ranger_cpu_instruction_master_requests_onchip_mem_s1 <= ((to_std_logic(((Std_Logic_Vector'(ranger_cpu_instruction_master_address_to_slave(20 DOWNTO 17) & std_logic_vector'("00000000000000000")) = std_logic_vector'("101100000000000000000")))) AND (ranger_cpu_instruction_master_read))) AND ranger_cpu_instruction_master_read;
   --ranger_cpu/data_master granted onchip_mem/s1 last time, which is an e_register
   process (clk, reset_n)
   begin
@@ -2665,7 +2665,7 @@ begin
   onchip_mem_s1_write <= internal_ranger_cpu_data_master_granted_onchip_mem_s1 AND ranger_cpu_data_master_write;
   shifted_address_to_onchip_mem_s1_from_ranger_cpu_data_master <= ranger_cpu_data_master_address_to_slave;
   --onchip_mem_s1_address mux, which is an e_mux
-  onchip_mem_s1_address <= A_EXT (A_WE_StdLogicVector((std_logic'((internal_ranger_cpu_data_master_granted_onchip_mem_s1)) = '1'), (A_SRL(shifted_address_to_onchip_mem_s1_from_ranger_cpu_data_master,std_logic_vector'("00000000000000000000000000000010"))), (A_SRL(shifted_address_to_onchip_mem_s1_from_ranger_cpu_instruction_master,std_logic_vector'("00000000000000000000000000000010")))), 14);
+  onchip_mem_s1_address <= A_EXT (A_WE_StdLogicVector((std_logic'((internal_ranger_cpu_data_master_granted_onchip_mem_s1)) = '1'), (A_SRL(shifted_address_to_onchip_mem_s1_from_ranger_cpu_data_master,std_logic_vector'("00000000000000000000000000000010"))), (A_SRL(shifted_address_to_onchip_mem_s1_from_ranger_cpu_instruction_master,std_logic_vector'("00000000000000000000000000000010")))), 15);
   shifted_address_to_onchip_mem_s1_from_ranger_cpu_instruction_master <= ranger_cpu_instruction_master_address_to_slave;
   --d1_onchip_mem_s1_end_xfer register, which is an e_register
   process (clk, reset_n)
@@ -3657,7 +3657,7 @@ begin
   --r_2 master_run cascaded wait assignment, which is an e_assign
   r_2 <= Vector_To_Std_Logic(((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(((ranger_cpu_instruction_master_granted_ranger_cpu_jtag_debug_module OR NOT ranger_cpu_instruction_master_qualified_request_ranger_cpu_jtag_debug_module))))) AND (((std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR((NOT ranger_cpu_instruction_master_qualified_request_ranger_cpu_jtag_debug_module OR NOT ranger_cpu_instruction_master_read)))) OR (((std_logic_vector'("00000000000000000000000000000001") AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(NOT d1_ranger_cpu_jtag_debug_module_end_xfer)))) AND (std_logic_vector'("0000000000000000000000000000000") & (A_TOSTDLOGICVECTOR(ranger_cpu_instruction_master_read)))))))));
   --optimize select-logic by passing only those address bits which matter.
-  internal_ranger_cpu_instruction_master_address_to_slave <= Std_Logic_Vector'(A_ToStdLogicVector(std_logic'('1')) & ranger_cpu_instruction_master_address(19 DOWNTO 17) & A_ToStdLogicVector(std_logic'('0')) & ranger_cpu_instruction_master_address(15 DOWNTO 0));
+  internal_ranger_cpu_instruction_master_address_to_slave <= Std_Logic_Vector'(A_ToStdLogicVector(std_logic'('1')) & ranger_cpu_instruction_master_address(19 DOWNTO 0));
   --ranger_cpu_instruction_master_read_but_no_slave_selected assignment, which is an e_register
   process (clk, reset_n)
   begin
@@ -3874,7 +3874,7 @@ begin
   sysid_control_slave_begins_xfer <= NOT d1_reasons_to_wait AND (internal_ranger_cpu_data_master_qualified_request_sysid_control_slave);
   --assign sysid_control_slave_readdata_from_sa = sysid_control_slave_readdata so that symbol knows where to group signals which may go to master only, which is an e_assign
   sysid_control_slave_readdata_from_sa <= sysid_control_slave_readdata;
-  internal_ranger_cpu_data_master_requests_sysid_control_slave <= ((to_std_logic(((Std_Logic_Vector'(ranger_cpu_data_master_address_to_slave(20 DOWNTO 3) & std_logic_vector'("000")) = std_logic_vector'("101000000000000000000")))) AND ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))) AND ranger_cpu_data_master_read;
+  internal_ranger_cpu_data_master_requests_sysid_control_slave <= ((to_std_logic(((Std_Logic_Vector'(ranger_cpu_data_master_address_to_slave(20 DOWNTO 3) & std_logic_vector'("000")) = std_logic_vector'("110000001000001011000")))) AND ((ranger_cpu_data_master_read OR ranger_cpu_data_master_write)))) AND ranger_cpu_data_master_read;
   --sysid_control_slave_arb_share_counter set values, which is an e_mux
   sysid_control_slave_arb_share_set_values <= std_logic'('1');
   --sysid_control_slave_non_bursting_master_requests mux, which is an e_mux
@@ -4910,7 +4910,7 @@ component onchip_mem_s1_arbitrator is
 
                  -- outputs:
                     signal d1_onchip_mem_s1_end_xfer : OUT STD_LOGIC;
-                    signal onchip_mem_s1_address : OUT STD_LOGIC_VECTOR (13 DOWNTO 0);
+                    signal onchip_mem_s1_address : OUT STD_LOGIC_VECTOR (14 DOWNTO 0);
                     signal onchip_mem_s1_byteenable : OUT STD_LOGIC_VECTOR (3 DOWNTO 0);
                     signal onchip_mem_s1_chipselect : OUT STD_LOGIC;
                     signal onchip_mem_s1_clken : OUT STD_LOGIC;
@@ -4932,7 +4932,7 @@ end component onchip_mem_s1_arbitrator;
 component onchip_mem is 
            port (
                  -- inputs:
-                    signal address : IN STD_LOGIC_VECTOR (13 DOWNTO 0);
+                    signal address : IN STD_LOGIC_VECTOR (14 DOWNTO 0);
                     signal byteenable : IN STD_LOGIC_VECTOR (3 DOWNTO 0);
                     signal chipselect : IN STD_LOGIC;
                     signal clk : IN STD_LOGIC;
@@ -5435,7 +5435,7 @@ end component cpu_reset_clk50_domain_synch_module;
                 signal jtag_uart_avalon_jtag_slave_writedata :  STD_LOGIC_VECTOR (31 DOWNTO 0);
                 signal module_input :  STD_LOGIC;
                 signal module_input1 :  STD_LOGIC;
-                signal onchip_mem_s1_address :  STD_LOGIC_VECTOR (13 DOWNTO 0);
+                signal onchip_mem_s1_address :  STD_LOGIC_VECTOR (14 DOWNTO 0);
                 signal onchip_mem_s1_byteenable :  STD_LOGIC_VECTOR (3 DOWNTO 0);
                 signal onchip_mem_s1_chipselect :  STD_LOGIC;
                 signal onchip_mem_s1_clken :  STD_LOGIC;

@@ -1,83 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><system name="cpu">
     <parameter name="bonusData">bonusData 
 {
-   element clk50
-   {
-      datum _sortIndex
-      {
-         value = "11";
-         type = "int";
-      }
-   }
-   element jtag_uart
-   {
-      datum _sortIndex
-      {
-         value = "8";
-         type = "int";
-      }
-      datum megawizard_uipreferences
-      {
-         value = "{}";
-         type = "String";
-      }
-   }
-   element cpu
-   {
-   }
-   element TR
-   {
-      datum _sortIndex
-      {
-         value = "5";
-         type = "int";
-      }
-   }
-   element BL
-   {
-      datum _sortIndex
-      {
-         value = "6";
-         type = "int";
-      }
-   }
-   element TL.avalon_slave
-   {
-      datum baseAddress
-      {
-         value = "262144";
-         type = "long";
-      }
-   }
-   element ranger_cpu
-   {
-      datum _sortIndex
-      {
-         value = "2";
-         type = "int";
-      }
-      datum megawizard_uipreferences
-      {
-         value = "{}";
-         type = "String";
-      }
-   }
-   element pll.s1
-   {
-      datum baseAddress
-      {
-         value = "1576960";
-         type = "long";
-      }
-   }
-   element jtag_uart.avalon_jtag_slave
-   {
-      datum baseAddress
-      {
-         value = "1577040";
-         type = "long";
-      }
-   }
    element ranger_cpu.jtag_debug_module
    {
       datum baseAddress
@@ -86,27 +9,19 @@
          type = "long";
       }
    }
-   element frame_received.s1
+   element TL
    {
-      datum baseAddress
+      datum _sortIndex
       {
-         value = "1577024";
-         type = "long";
+         value = "4";
+         type = "int";
       }
    }
-   element BR.avalon_slave
+   element timer_1ms.s1
    {
       datum baseAddress
       {
-         value = "1048576";
-         type = "long";
-      }
-   }
-   element onchip_mem.s1
-   {
-      datum baseAddress
-      {
-         value = "1441792";
+         value = "1576992";
          type = "long";
       }
    }
@@ -126,6 +41,78 @@
          type = "long";
       }
    }
+   element BL
+   {
+      datum _sortIndex
+      {
+         value = "6";
+         type = "int";
+      }
+   }
+   element BR.avalon_slave
+   {
+      datum baseAddress
+      {
+         value = "1048576";
+         type = "long";
+      }
+   }
+   element sysid.control_slave
+   {
+      datum baseAddress
+      {
+         value = "1577048";
+         type = "long";
+      }
+   }
+   element cpu
+   {
+   }
+   element TL.avalon_slave
+   {
+      datum baseAddress
+      {
+         value = "262144";
+         type = "long";
+      }
+   }
+   element TR
+   {
+      datum _sortIndex
+      {
+         value = "5";
+         type = "int";
+      }
+   }
+   element clk50
+   {
+      datum _sortIndex
+      {
+         value = "11";
+         type = "int";
+      }
+   }
+   element onchip_mem
+   {
+      datum _sortIndex
+      {
+         value = "1";
+         type = "int";
+      }
+      datum megawizard_uipreferences
+      {
+         value = "{}";
+         type = "String";
+      }
+   }
+   element onchip_mem.s1
+   {
+      datum baseAddress
+      {
+         value = "1441792";
+         type = "long";
+      }
+   }
    element TR.avalon_slave
    {
       datum baseAddress
@@ -134,27 +121,19 @@
          type = "long";
       }
    }
-   element sysid.control_slave
+   element jtag_uart.avalon_jtag_slave
    {
       datum baseAddress
       {
-         value = "1310720";
+         value = "1577040";
          type = "long";
       }
    }
-   element BL.avalon_slave
-   {
-      datum baseAddress
-      {
-         value = "786432";
-         type = "long";
-      }
-   }
-   element timer_1ms
+   element frame_received
    {
       datum _sortIndex
       {
-         value = "9";
+         value = "10";
          type = "int";
       }
       datum megawizard_uipreferences
@@ -171,14 +150,6 @@
          type = "int";
       }
    }
-   element TL
-   {
-      datum _sortIndex
-      {
-         value = "4";
-         type = "int";
-      }
-   }
    element pll
    {
       datum _sortIndex
@@ -192,11 +163,11 @@
          type = "String";
       }
    }
-   element onchip_mem
+   element jtag_uart
    {
       datum _sortIndex
       {
-         value = "1";
+         value = "8";
          type = "int";
       }
       datum megawizard_uipreferences
@@ -213,19 +184,11 @@
          type = "String";
       }
    }
-   element timer_1ms.s1
-   {
-      datum baseAddress
-      {
-         value = "1576992";
-         type = "long";
-      }
-   }
-   element frame_received
+   element timer_1ms
    {
       datum _sortIndex
       {
-         value = "10";
+         value = "9";
          type = "int";
       }
       datum megawizard_uipreferences
@@ -247,6 +210,43 @@
          type = "String";
       }
    }
+   element ranger_cpu
+   {
+      datum _sortIndex
+      {
+         value = "2";
+         type = "int";
+      }
+      datum megawizard_uipreferences
+      {
+         value = "{}";
+         type = "String";
+      }
+   }
+   element BL.avalon_slave
+   {
+      datum baseAddress
+      {
+         value = "786432";
+         type = "long";
+      }
+   }
+   element frame_received.s1
+   {
+      datum baseAddress
+      {
+         value = "1577024";
+         type = "long";
+      }
+   }
+   element pll.s1
+   {
+      datum baseAddress
+      {
+         value = "1576960";
+         type = "long";
+      }
+   }
 }
 </parameter>
     <parameter name="deviceFamily" value="CYCLONEIII" />
@@ -254,8 +254,8 @@
     <parameter name="hardcopyCompatible" value="false" />
     <parameter name="hdlLanguage" value="VHDL" />
     <parameter name="projectName" value="PMD19k_Cyclone.qpf" />
-    <parameter name="systemHash" value="11055944740" />
-    <parameter name="timeStamp" value="1283293370203" />
+    <parameter name="systemHash" value="14347316320" />
+    <parameter name="timeStamp" value="1283298566136" />
     <module name="clk50" kind="clock_source" version="8.0" enabled="1">
         <parameter name="clockFrequency" value="50000000" />
         <parameter name="clockFrequencyKnown" value="true" />
@@ -456,7 +456,7 @@
         <parameter name="initMemContent" value="true" />
         <parameter name="initializationFileName" value="onchip_mem" />
         <parameter name="instanceID" value="NONE" />
-        <parameter name="memorySize" value="65536" />
+        <parameter name="memorySize" value="81920" />
         <parameter name="readDuringWriteMode" value="DONT_CARE" />
         <parameter name="simAllowMRAMContentsFile" value="false" />
         <parameter name="slave1Latency" value="1" />
@@ -651,6 +651,6 @@
     <connection kind="clock" version="8.0" start="pll.c0" end="sysid.clk" />
     <connection kind="avalon" version="6.1" start="ranger_cpu.data_master" end="sysid.control_slave">
         <parameter name="arbitrationPriority" value="1" />
-        <parameter name="baseAddress" value="0x00140000" />
+        <parameter name="baseAddress" value="0x00181058" />
     </connection>
 </system>
