@@ -23,3 +23,8 @@ git push : pushes commited changes to github.
 
 git --help
 git <command> --help.  Gives help info for git and git commands (eg, commit, add, etc.
+
+git pull origin master : Fetches and merges changes from origin (the web hosted version) into master (my local version).
+
+git fetch origin
+git merge origin/master  :  These two commands do the same as 'git pull origin master', but gives more info about any conflicts.
