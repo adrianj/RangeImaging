@@ -31,3 +31,4 @@ git merge origin/master  :  These two commands do the same as 'git pull origin m
 
 Here is some text that I plan to cause a conflict over.
 
+This text here will cause a conflict...
