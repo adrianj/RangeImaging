@@ -29,3 +29,4 @@ git pull origin master : Fetches and merges changes from origin (the web hosted 
 git fetch origin
 git merge origin/master  :  These two commands do the same as 'git pull origin master', but so far I haven't had much luck with the automerging of conflicts, eg, within this readme file.
 
+This text here will cause a conflict...
