@@ -19,16 +19,12 @@ git add <file> : Adds files to repositories. Be careful when adding directories,
 
 git commit -a -m "message" : Commits changes to all modified files. Without the -m "message" it opens up VIM asking for a message. Quitting is not intuitive - type "<esc> :wq" to save and quit. There must surely be an easier way!!
 
-git push : pushes commited changes to github. If it fails, do a fetch/merge to fix any conflicts (see below)
+git push : pushes commited changes to github. If it fails, do a fetch/merge to fix any conflicts (see below) and then try push again.
 
 git --help
 git <command> --help.  Gives help info for git and git commands (eg, commit, add, etc.)
 
 git pull origin master : Fetches and merges changes from origin (the web hosted version) into master (my local version).
 
-git fetch origin
-git merge origin/master  :  These two commands do the same as 'git pull origin master', but so far I haven't had much luck with the automerging of conflicts, eg, within this readme file.  
-
-Here is some text that I plan to cause a conflict over.
-
-This text here will cause a conflict...
+git fetch origin	: followed by...
+git merge origin/master  :  These two commands do the same as 'git pull origin master', but so far I haven't had much luck with the automerging of conflicts, eg, within this readme file.
