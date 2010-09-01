@@ -19,7 +19,7 @@ git add <file> : Adds files to repositories. Be careful when adding directories,
 
 git commit -a -m "message" : Commits changes to all modified files. Without the -m "message" it opens up VIM asking for a message. Quitting is not intuitive - type "<esc> :wq" to save and quit. There must surely be an easier way!!
 
-git push : pushes commited changes to github.
+git push : pushes commited changes to github. If it fails, do a fetch/merge to fix any conflicts (see below)
 
 git --help
 git <command> --help.  Gives help info for git and git commands (eg, commit, add, etc.)
