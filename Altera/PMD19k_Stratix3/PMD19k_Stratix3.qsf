@@ -1,0 +1,457 @@
+# Copyright (C) 1991-2008 Altera Corporation
+# Your use of Altera Corporation's design tools, logic functions 
+# and other software and tools, and its AMPP partner logic 
+# functions, and any output files from any of the foregoing 
+# (including device programming or simulation files), and any 
+# associated documentation or information are expressly subject 
+# to the terms and conditions of the Altera Program License 
+# Subscription Agreement, Altera MegaCore Function License 
+# Agreement, or other applicable license agreement, including, 
+# without limitation, that your use is for the sole purpose of 
+# programming logic devices manufactured by Altera and sold by 
+# Altera or its authorized distributors.  Please refer to the 
+# applicable agreement for further details.
+
+
+# The default values for assignments are stored in the file
+#		PMD19k_Stratix3_assignment_defaults.qdf
+# If this file doesn't exist, and for assignments not listed, see file
+#		assignment_defaults.qdf
+
+# Altera recommends that you do not modify this file. This
+# file is updated automatically by the Quartus II software
+# and any changes you make may be lost or overwritten.
+
+
+set_global_assignment -name FAMILY "Stratix III"
+set_global_assignment -name DEVICE EP3SL150F1152C2
+set_global_assignment -name TOP_LEVEL_ENTITY PMD19k_Stratix3
+set_global_assignment -name ORIGINAL_QUARTUS_VERSION 8.0
+set_global_assignment -name PROJECT_CREATION_TIME_DATE "10:55:18  SEPTEMBER 10, 2010"
+set_global_assignment -name LAST_QUARTUS_VERSION 8.0
+set_global_assignment -name EDA_SIMULATION_TOOL "Custom VHDL"
+set_global_assignment -name EDA_TIME_SCALE "1 ps" -section_id eda_simulation
+set_global_assignment -name EDA_OUTPUT_DATA_FORMAT VHDL -section_id eda_simulation
+set_global_assignment -name USE_GENERATED_PHYSICAL_CONSTRAINTS OFF -section_id eda_palace
+set_global_assignment -name STRATIXII_OPTIMIZATION_TECHNIQUE SPEED
+set_global_assignment -name DEVICE_FILTER_PACKAGE FBGA
+set_global_assignment -name DEVICE_FILTER_PIN_COUNT 1152
+set_global_assignment -name DEVICE_FILTER_SPEED_GRADE 2
+set_global_assignment -name NOMINAL_CORE_SUPPLY_VOLTAGE 1.1V
+
+
+
+
+set_location_assignment PIN_T33 -to clk50
+set_location_assignment PIN_B16 -to clk125
+set_location_assignment PIN_AP5 -to reset_n
+set_location_assignment PIN_B17 -to buttons[0]
+set_location_assignment PIN_A17 -to buttons[1]
+set_location_assignment PIN_A16 -to buttons[2]
+set_location_assignment PIN_K17 -to buttons[3]
+set_location_assignment PIN_F21 -to leds[0]
+set_location_assignment PIN_C23 -to leds[1]
+set_location_assignment PIN_B23 -to leds[2]
+set_location_assignment PIN_A23 -to leds[3]
+set_location_assignment PIN_D19 -to leds[4]
+set_location_assignment PIN_C19 -to leds[5]
+set_location_assignment PIN_F19 -to leds[6]
+set_location_assignment PIN_E19 -to leds[7]
+set_location_assignment PIN_B19 -to switches[0]
+set_location_assignment PIN_A19 -to switches[1]
+set_location_assignment PIN_C18 -to switches[2]
+set_location_assignment PIN_A20 -to switches[3]
+set_location_assignment PIN_K19 -to switches[4]
+set_location_assignment PIN_J19 -to switches[5]
+set_location_assignment PIN_L19 -to switches[6]
+set_location_assignment PIN_L20 -to switches[7]
+set_location_assignment PIN_AE10 -to ssd_c[0]
+set_location_assignment PIN_AL5 -to ssd_c[1]
+set_location_assignment PIN_AC12 -to ssd_c[2]
+set_location_assignment PIN_AM5 -to ssd_c[3]
+set_location_assignment PIN_AF11 -to ssd_c[4]
+set_location_assignment PIN_AM6 -to ssd_c[5]
+set_location_assignment PIN_AP3 -to ssd_c[6]
+set_location_assignment PIN_AK6 -to ssd_c[7]
+set_location_assignment PIN_AH11 -to ssd_c[8]
+set_location_assignment PIN_AM4 -to ssd_a[3]
+set_location_assignment PIN_AE12 -to ssd_a[2]
+set_location_assignment PIN_AL4 -to ssd_a[1]
+set_location_assignment PIN_AH8 -to ssd_a[0]
+set_location_assignment PIN_AB6 -to ENET_CLK
+set_location_assignment PIN_Y5 -to ENET_CMD
+set_location_assignment PIN_AB5 -to ENET_CS_N
+set_location_assignment PIN_AC7 -to ENET_INT
+set_location_assignment PIN_Y6 -to ENET_RD_N
+set_location_assignment PIN_AB8 -to ENET_WR_N
+set_location_assignment PIN_W8 -to ENET_DATA[0]
+set_location_assignment PIN_AA12 -to ENET_DATA[1]
+set_location_assignment PIN_W7 -to ENET_DATA[2]
+set_location_assignment PIN_AB11 -to ENET_DATA[3]
+set_location_assignment PIN_AE2 -to ENET_DATA[4]
+set_location_assignment PIN_AE1 -to ENET_DATA[5]
+set_location_assignment PIN_AE4 -to ENET_DATA[6]
+set_location_assignment PIN_AC2 -to ENET_DATA[7]
+set_location_assignment PIN_AA7 -to ENET_DATA[8]
+set_location_assignment PIN_AA6 -to ENET_DATA[9]
+set_location_assignment PIN_Y8 -to ENET_DATA[10]
+set_location_assignment PIN_Y10 -to ENET_DATA[11]
+set_location_assignment PIN_Y7 -to ENET_DATA[12]
+set_location_assignment PIN_Y9 -to ENET_DATA[13]
+set_location_assignment PIN_W12 -to ENET_DATA[14]
+set_location_assignment PIN_Y11 -to ENET_DATA[15]
+set_location_assignment PIN_AC1 -to debug[0]
+set_location_assignment PIN_Y3 -to debug[4]
+set_location_assignment PIN_Y4 -to VGA_CLK
+set_location_assignment PIN_AL7 -to VGA_B[9]
+set_location_assignment PIN_AK9 -to VGA_B[8]
+set_location_assignment PIN_AC11 -to VGA_B[7]
+set_location_assignment PIN_AC9 -to VGA_B[6]
+set_location_assignment PIN_AB10 -to VGA_B[5]
+set_location_assignment PIN_AC8 -to VGA_B[4]
+set_location_assignment PIN_AH5 -to VGA_B[3]
+set_location_assignment PIN_AH4 -to VGA_B[2]
+set_location_assignment PIN_AE7 -to VGA_B[1]
+set_location_assignment PIN_AE8 -to VGA_B[0]
+set_location_assignment PIN_AF5 -to VGA_sync
+set_location_assignment PIN_AF6 -to VGA_blank
+set_location_assignment PIN_AD6 -to VGA_G[9]
+set_location_assignment PIN_AD7 -to VGA_G[8]
+set_location_assignment PIN_V10 -to VGA_G[7]
+set_location_assignment PIN_AE6 -to VGA_G[6]
+set_location_assignment PIN_W9 -to VGA_G[5]
+set_location_assignment PIN_AE5 -to VGA_G[4]
+set_location_assignment PIN_AJ9 -to VGA_G[3]
+set_location_assignment PIN_AL9 -to VGA_G[2]
+set_location_assignment PIN_AJ4 -to VGA_G[1]
+set_location_assignment PIN_AG4 -to VGA_G[0]
+set_location_assignment PIN_AJ3 -to VGA_R[9]
+set_location_assignment PIN_AG3 -to VGA_R[8]
+set_location_assignment PIN_AM2 -to VGA_R[7]
+set_location_assignment PIN_AM1 -to VGA_R[6]
+set_location_assignment PIN_AL2 -to VGA_R[5]
+set_location_assignment PIN_AJ2 -to VGA_R[4]
+set_location_assignment PIN_AL1 -to VGA_R[3]
+set_location_assignment PIN_AK1 -to VGA_R[2]
+set_location_assignment PIN_AF4 -to VGA_R[1]
+set_location_assignment PIN_AG1 -to VGA_R[0]
+set_location_assignment PIN_AF3 -to VGA_VS
+set_location_assignment PIN_AH1 -to VGA_HS
+set_location_assignment PIN_P2 -to PMD_end_r
+set_location_assignment PIN_R1 -to "PMD_end_r(n)"
+set_location_assignment PIN_R4 -to PMD_end_c
+set_location_assignment PIN_R3 -to "PMD_end_c(n)"
+set_location_assignment PIN_P6 -to PMD_clk_r
+set_location_assignment PIN_P5 -to "PMD_clk_r(n)"
+set_location_assignment PIN_M7 -to PMD_clear_r
+set_location_assignment PIN_M6 -to "PMD_clear_r(n)"
+set_location_assignment PIN_T5 -to PMD_clk_c
+set_location_assignment PIN_T4 -to "PMD_clk_c(n)"
+set_location_assignment PIN_R10 -to PMD_clear_c
+set_location_assignment PIN_R9 -to "PMD_clear_c(n)"
+set_location_assignment PIN_L9 -to PMD_hold
+set_location_assignment PIN_L8 -to "PMD_hold(n)"
+set_location_assignment PIN_N9 -to PMD_mod
+set_location_assignment PIN_N8 -to "PMD_mod(n)"
+set_location_assignment PIN_R7 -to PMD_reset_n
+set_location_assignment PIN_R6 -to "PMD_reset_n(n)"
+set_location_assignment PIN_M10 -to PMD_start_r
+set_location_assignment PIN_M9 -to "PMD_start_r(n)"
+set_location_assignment PIN_T7 -to PMD_start_c
+set_location_assignment PIN_U6 -to "PMD_start_c(n)"
+set_location_assignment PIN_H2 -to ADC_d[0]
+set_location_assignment PIN_J1 -to "ADC_d[0](n)"
+set_location_assignment PIN_G2 -to ADC_d[1]
+set_location_assignment PIN_H1 -to "ADC_d[1](n)"
+set_location_assignment PIN_F1 -to ADC_d[2]
+set_location_assignment PIN_G1 -to "ADC_d[2](n)"
+set_location_assignment PIN_H4 -to ADC_d[3]
+set_location_assignment PIN_H3 -to "ADC_d[3](n)"
+set_location_assignment PIN_C1 -to ADC_d[4]
+set_location_assignment PIN_D1 -to "ADC_d[4](n)"
+set_location_assignment PIN_D3 -to ADC_d[5]
+set_location_assignment PIN_D2 -to "ADC_d[5](n)"
+set_location_assignment PIN_E2 -to ADC_d[6]
+set_location_assignment PIN_E1 -to "ADC_d[6](n)"
+set_location_assignment PIN_G5 -to ADC_d[7]
+set_location_assignment PIN_G4 -to "ADC_d[7](n)"
+set_location_assignment PIN_N2 -to ADC_sdata_read
+set_location_assignment PIN_P1 -to "ADC_sdata_read(n)"
+set_location_assignment PIN_L5 -to ADC_adcclk
+set_location_assignment PIN_L4 -to "ADC_adcclk(n)"
+set_location_assignment PIN_L7 -to ADC_cdsclk
+set_location_assignment PIN_L6 -to "ADC_cdsclk(n)"
+set_location_assignment PIN_J7 -to ADC_sclk
+set_location_assignment PIN_J6 -to "ADC_sclk(n)"
+set_location_assignment PIN_K6 -to ADC_sload
+set_location_assignment PIN_K5 -to "ADC_sload(n)"
+set_location_assignment PIN_H6 -to ADC_sdata_write
+set_location_assignment PIN_H5 -to "ADC_sdata_write(n)"
+set_location_assignment PIN_K8 -to ADC_sdata_we_n
+set_location_assignment PIN_K7 -to "ADC_sdata_we_n(n)"
+set_location_assignment PIN_F4 -to spare_rx
+set_location_assignment PIN_F3 -to "spare_rx(n)"
+set_location_assignment PIN_P4 -to laser_rx
+set_location_assignment PIN_P3 -to "laser_rx(n)"
+set_location_assignment PIN_N11 -to laser_tx
+set_location_assignment PIN_N10 -to "laser_tx(n)"
+set_location_assignment PIN_T9 -to laser_mod_1
+set_location_assignment PIN_T8 -to "laser_mod_1(n)"
+set_location_assignment PIN_P11 -to laser_mod_2
+set_location_assignment PIN_P10 -to "laser_mod_2(n)"
+set_location_assignment PIN_R12 -to spare_tx
+set_location_assignment PIN_T11 -to "spare_tx(n)"
+
+set_instance_assignment -name IO_STANDARD "1.8 V" -to clk50
+set_instance_assignment -name IO_STANDARD "1.8 V" -to clk125
+set_instance_assignment -name IO_STANDARD "2.5 V" -to reset_n
+set_instance_assignment -name IO_STANDARD "1.8 V" -to buttons
+set_instance_assignment -name IO_STANDARD "1.8 V" -to leds
+set_instance_assignment -name IO_STANDARD "1.8 V" -to switches
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ssd_c
+set_instance_assignment -name IO_STANDARD "2.5 V" -to ssd_a
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_end_r
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_end_c
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_clk_r
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_clear_r
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_clk_c
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_clear_c
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_start_r
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_start_c
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_reset_n
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_mod
+set_instance_assignment -name IO_STANDARD LVDS -to PMD_hold
+set_instance_assignment -name IO_STANDARD LVDS -to ADC_d[7..0]
+set_instance_assignment -name IO_STANDARD LVDS -to ADC_sdata_read
+set_instance_assignment -name IO_STANDARD LVDS -to ADC_sload
+set_instance_assignment -name IO_STANDARD LVDS -to ADC_sdata_write
+set_instance_assignment -name IO_STANDARD LVDS -to ADC_sdata_we_n
+set_instance_assignment -name IO_STANDARD LVDS -to ADC_sclk
+set_instance_assignment -name IO_STANDARD LVDS -to ADC_cdsclk
+set_instance_assignment -name IO_STANDARD LVDS -to ADC_adcclk
+set_instance_assignment -name IO_STANDARD LVDS -to laser_rx
+set_instance_assignment -name IO_STANDARD LVDS -to spare_rx
+set_instance_assignment -name IO_STANDARD LVDS -to laser_tx
+set_instance_assignment -name IO_STANDARD LVDS -to laser_mod_1
+set_instance_assignment -name IO_STANDARD LVDS -to laser_mod_2
+set_instance_assignment -name IO_STANDARD LVDS -to spare_tx
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
+
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to reset_n
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to buttons
+set_instance_assignment -name TOGGLE_RATE "0 MHz" -to switches
+
+set_instance_assignment -name DQ_GROUP 9 -from ddr2_deva_dqs_p -to ddr2_deva_dq[0..7]
+set_instance_assignment -name DQ_GROUP 9 -from ddr2_deva_dqs_p -to ddr2_deva_dm
+set_instance_assignment -name DQSB_DQS_PAIR ON -from ddr2_deva_dqs_n -to ddr2_deva_dqs_p
+set_location_assignment PIN_J26 -to vref_dev
+set_location_assignment PIN_F34 -to ddr2_deva_a[0]
+set_location_assignment PIN_G34 -to ddr2_deva_a[1]
+set_location_assignment PIN_G31 -to ddr2_deva_a[2]
+set_location_assignment PIN_N24 -to ddr2_deva_a[3]
+set_location_assignment PIN_L29 -to ddr2_deva_a[4]
+set_location_assignment PIN_M30 -to ddr2_deva_a[5]
+set_location_assignment PIN_L31 -to ddr2_deva_a[6]
+set_location_assignment PIN_P25 -to ddr2_deva_a[7]
+set_location_assignment PIN_K33 -to ddr2_deva_a[8]
+set_location_assignment PIN_M29 -to ddr2_deva_a[9]
+set_location_assignment PIN_J34 -to ddr2_deva_a[10]
+set_location_assignment PIN_L32 -to ddr2_deva_a[11]
+set_location_assignment PIN_P23 -to ddr2_deva_a[12]
+set_location_assignment PIN_M26 -to ddr2_deva_a[13]
+set_location_assignment PIN_N26 -to ddr2_deva_a[14]
+set_location_assignment PIN_H34 -to ddr2_deva_ba[0]
+set_location_assignment PIN_K30 -to ddr2_deva_ba[1]
+set_location_assignment PIN_J33 -to ddr2_deva_ba[2]
+set_location_assignment PIN_G30 -to ddr2_deva_casn
+set_location_assignment PIN_K32 -to ddr2_deva_ck_n
+set_location_assignment PIN_K31 -to ddr2_deva_ck_p
+set_location_assignment PIN_M27 -to ddr2_deva_cke
+set_location_assignment PIN_E34 -to ddr2_deva_csn
+set_location_assignment PIN_F31 -to ddr2_deva_dm
+set_location_assignment PIN_K27 -to ddr2_deva_dq[0]
+set_location_assignment PIN_J30 -to ddr2_deva_dq[1]
+set_location_assignment PIN_K28 -to ddr2_deva_dq[2]
+set_location_assignment PIN_J29 -to ddr2_deva_dq[3]
+set_location_assignment PIN_H32 -to ddr2_deva_dq[4]
+set_location_assignment PIN_M24 -to ddr2_deva_dq[5]
+set_location_assignment PIN_H31 -to ddr2_deva_dq[6]
+set_location_assignment PIN_N25 -to ddr2_deva_dq[7]
+set_location_assignment PIN_C34 -to ddr2_deva_dqs_n
+set_location_assignment PIN_C33 -to ddr2_deva_dqs_p
+set_location_assignment PIN_M28 -to ddr2_deva_odt
+set_location_assignment PIN_F32 -to ddr2_deva_rasn
+set_location_assignment PIN_G33 -to ddr2_deva_wen
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[0]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[1]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[2]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[3]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[4]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[5]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[6]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[7]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[8]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[9]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[10]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[11]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[12]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[13]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_a[14]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_ba
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_ba[0]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_ba[1]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_ba[2]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_casn
+set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.8-V SSTL CLASS I" -to ddr2_deva_ck_n
+set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.8-V SSTL CLASS I" -to ddr2_deva_ck_p
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_cke
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_csn
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_deva_dm
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_deva_dq
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_deva_dq[0]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_deva_dq[1]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_deva_dq[2]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_deva_dq[3]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_deva_dq[4]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_deva_dq[5]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_deva_dq[6]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_deva_dq[7]
+set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.8-V SSTL CLASS I" -to ddr2_deva_dqs_n
+set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.8-V SSTL CLASS I" -to ddr2_deva_dqs_p
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_odt
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_rasn
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_deva_wen
+set_instance_assignment -name DQ_GROUP 9 -from ddr2_devb_dqs_p -to ddr2_devb_dq[0..7]
+set_instance_assignment -name DQ_GROUP 9 -from ddr2_devb_dqs_p -to ddr2_devb_dm
+set_instance_assignment -name DQSB_DQS_PAIR ON -from ddr2_devb_dqs_n -to ddr2_devb_dqs_p
+set_location_assignment PIN_R27 -to ddr2_devb_a[0]
+set_location_assignment PIN_R29 -to ddr2_devb_a[1]
+set_location_assignment PIN_J31 -to ddr2_devb_a[2]
+set_location_assignment PIN_U32 -to ddr2_devb_a[3]
+set_location_assignment PIN_K34 -to ddr2_devb_a[4]
+set_location_assignment PIN_T23 -to ddr2_devb_a[5]
+set_location_assignment PIN_M34 -to ddr2_devb_a[6]
+set_location_assignment PIN_U31 -to ddr2_devb_a[7]
+set_location_assignment PIN_R24 -to ddr2_devb_a[8]
+set_location_assignment PIN_V31 -to ddr2_devb_a[9]
+set_location_assignment PIN_P34 -to ddr2_devb_a[10]
+set_location_assignment PIN_T29 -to ddr2_devb_a[11]
+set_location_assignment PIN_V32 -to ddr2_devb_a[12]
+set_location_assignment PIN_R28 -to ddr2_devb_a[13]
+set_location_assignment PIN_T30 -to ddr2_devb_a[14]
+set_location_assignment PIN_N32 -to ddr2_devb_ba[0]
+set_location_assignment PIN_N33 -to ddr2_devb_ba[1]
+set_location_assignment PIN_R30 -to ddr2_devb_ba[2]
+set_location_assignment PIN_U25 -to ddr2_devb_casn
+set_location_assignment PIN_R32 -to ddr2_devb_ck_n
+set_location_assignment PIN_P31 -to ddr2_devb_ck_p
+set_location_assignment PIN_N34 -to ddr2_devb_cke
+set_location_assignment PIN_J32 -to ddr2_devb_csn
+set_location_assignment PIN_M31 -to ddr2_devb_dm
+set_location_assignment PIN_P29 -to ddr2_devb_dq[0]
+set_location_assignment PIN_P32 -to ddr2_devb_dq[1]
+set_location_assignment PIN_N30 -to ddr2_devb_dq[2]
+set_location_assignment PIN_N31 -to ddr2_devb_dq[3]
+set_location_assignment PIN_R26 -to ddr2_devb_dq[4]
+set_location_assignment PIN_P28 -to ddr2_devb_dq[5]
+set_location_assignment PIN_R25 -to ddr2_devb_dq[6]
+set_location_assignment PIN_N29 -to ddr2_devb_dq[7]
+set_location_assignment PIN_L34 -to ddr2_devb_dqs_n
+set_location_assignment PIN_M33 -to ddr2_devb_dqs_p
+set_location_assignment PIN_D34 -to ddr2_devb_odt
+set_location_assignment PIN_D33 -to ddr2_devb_rasn
+set_location_assignment PIN_T26 -to ddr2_devb_wen
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[0]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[1]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[2]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[3]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[4]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[5]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[6]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[7]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[8]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[9]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[10]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[11]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[12]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[13]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_a[14]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_ba
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_ba[0]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_ba[1]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_ba[2]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_casn
+set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.8-V SSTL CLASS I" -to ddr2_devb_ck_n
+set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.8-V SSTL CLASS I" -to ddr2_devb_ck_p
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_cke
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_csn
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_devb_dm
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_devb_dq
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_devb_dq[0]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_devb_dq[1]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_devb_dq[2]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_devb_dq[3]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_devb_dq[4]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_devb_dq[5]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_devb_dq[6]
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS II" -to ddr2_devb_dq[7]
+set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.8-V SSTL CLASS I" -to ddr2_devb_dqs_n
+set_instance_assignment -name IO_STANDARD "DIFFERENTIAL 1.8-V SSTL CLASS I" -to ddr2_devb_dqs_p
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_odt
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_rasn
+set_instance_assignment -name IO_STANDARD "SSTL-18 CLASS I" -to ddr2_devb_wen
+set_global_assignment -name MISC_FILE "D:/sync/PhD/altera_S3/PMD19k_Jun09/PMD19k_Jun09.dpf"
+set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS ON
+set_global_assignment -name TIMEQUEST_DO_CCPP_REMOVAL ON
+set_instance_assignment -name INPUT_TERMINATION DIFFERENTIAL -to ADC_d[7..0]
+set_instance_assignment -name INPUT_TERMINATION DIFFERENTIAL -to ADC_sdata_read
+set_instance_assignment -name INPUT_TERMINATION DIFFERENTIAL -to PMD_end_r
+set_instance_assignment -name INPUT_TERMINATION DIFFERENTIAL -to PMD_end_c
+set_instance_assignment -name INPUT_TERMINATION DIFFERENTIAL -to laser_rx
+
+set_global_assignment -name ENABLE_ADVANCED_IO_TIMING ON
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
+set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
+set_global_assignment -name PARTITION_COLOR 14622752 -section_id Top
+set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
+set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
+set_global_assignment -name SEARCH_PATH "d:\\sync\\phd\\altera_s3\\tcl_scripts/"
+set_global_assignment -name SEARCH_PATH "d:\\sync\\phd\\altera_s3\\tcl_scripts"
+set_global_assignment -name VHDL_FILE ranger_cpu.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/ranger_process.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/pll_reconfig_full_c3.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/mod_homodyne_c3.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/pll_control_c3_full.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram64x64x2.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/mod_homodyne_s3.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/pll_control_s3_full.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram64x64xN.vhd
+set_global_assignment -name VHDL_FILE cpu.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/VGA_Monitor/vga_module.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/simple_logarithm.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/frequency_controller.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/signedmult18x18.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/signedmultXxY.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/phase_controller.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/pll_reconfig_full.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/cordic_cosine.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/cordic_atan.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/mod_disambig.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram128x128xN.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram32x128x1.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram32x128x9.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram32x128xN.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram128x128x1.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram128x128x9.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/testbench_functions.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/generic/SPI_master.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/triram160x128xN.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/Altera_Specific/dualram160x128xN.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/PMD19k_interface.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/PMD19k_registers.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/PMD_Ranger_top.vhd
+set_global_assignment -name VHDL_FILE ../../VHDL/PMD19k/vga_tester.vhd
+set_global_assignment -name VHDL_FILE PMD19k_Stratix3.vhd
+set_global_assignment -name QIP_FILE ranger_cpu.qip

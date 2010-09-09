@@ -16,7 +16,7 @@ use ieee.std_logic_unsigned.all;
 entity PMD_Ranger_top is
   generic (IS_CYCLONE3 : std_logic := '0';
            OB_WIDTH    : integer   := 16;
-		   SMALL_RAM : std_logic := '0');
+           SMALL_RAM   : std_logic := '0');
   port (
     clk     : in  std_logic;
     clk50   : in  std_logic;
@@ -152,16 +152,18 @@ architecture rtl of PMD_Ranger_top is
   signal BR_din_int  : std_logic_vector(15 downto 0) := (others => '0');
   signal BR_addr_int : std_logic_vector(14 downto 0) := (others => '0');
 
-  signal process_data_1 : std_logic_vector(15 downto 0) := (others => '0');
-  signal process_data_2 : std_logic_vector(15 downto 0) := (others => '0');
-  signal process_addr_1   : std_logic_vector(14 downto 0) := (others => '0');
-  signal process_valid_1  : std_logic                     := '0';
-  signal process_addr_2   : std_logic_vector(14 downto 0) := (others => '0');
-  signal process_valid_2  : std_logic                     := '0';
-
-  --signal debug_data_1 : std_logic_vector(15 downto 0) := (others => '0');
-  --signal debug_addr   : std_logic_vector(14 downto 0) := (others => '0');
-  --signal debug_valid  : std_logic                     := '0';
+  signal process_data_1  : std_logic_vector(15 downto 0) := (others => '0');
+  signal process_data_2  : std_logic_vector(15 downto 0) := (others => '0');
+  signal process_addr_1  : std_logic_vector(14 downto 0) := (others => '0');
+  signal process_valid_1 : std_logic                     := '0';
+  signal process_addr_2  : std_logic_vector(14 downto 0) := (others => '0');
+  signal process_valid_2 : std_logic                     := '0';
+  signal process_data_3  : std_logic_vector(15 downto 0) := (others => '0');
+  signal process_data_4  : std_logic_vector(15 downto 0) := (others => '0');
+  signal process_addr_3  : std_logic_vector(14 downto 0) := (others => '0');
+  signal process_valid_3 : std_logic                     := '0';
+  signal process_addr_4  : std_logic_vector(14 downto 0) := (others => '0');
+  signal process_valid_4 : std_logic                     := '0';
 
   signal sin_cosine_addr : std_logic_vector(8 downto 0) := (others => '0');
   signal sin_cosine_we   : std_logic                    := '0';
@@ -177,7 +179,7 @@ architecture rtl of PMD_Ranger_top is
   signal saturation_level      : std_logic_vector(15 downto 0) := (others => '0');
   signal phase_correction_1    : std_logic_vector(15 downto 0) := (others => '0');
   signal process_select        : std_logic                     := '0';
-  signal process_output_select : std_logic_vector(7 downto 0)  := X"01";
+  signal process_output_select : std_logic_vector(15 downto 0) := X"2301";
 
   signal adc_control_data : std_logic_vector(11 downto 0) := (others => '0');
   signal adc_we           : std_logic                     := '0';
@@ -218,7 +220,7 @@ begin  -- rtl
       laser_mod_out_1    => laser_mod_out_1,
       laser_mod_out_2    => laser_mod_out_2);
 
-  MODULATION_SOURCE_1 : entity work.mod_homodyne_c3
+  MODULATION_SOURCE_1 : entity work.mod_homodyne_s3
     generic map (IS_CYCLONE3 => IS_CYCLONE3,
                  M_DEFAULT   => X"3C",
                  C_DEFAULT   => X"0F")
@@ -283,53 +285,53 @@ begin  -- rtl
       sdata_rw         => ADC_sdata_we_n,
       adc_control_data => adc_control_data,
       adc_we           => adc_we); 
-  
-  GEN_TOP : if SMALL_RAM = '0' generate
-  TL_BUFFER : entity work.triram160x128xN
-    generic map (N         => OB_WIDTH,
-                 SMALL_RAM => SMALL_RAM)
-    port map (
-      address_a => TL_addr,
-      address_b => TL_addr_int,
-      address_c => vga_addr,
-      clock     => clk,
-      data_a    => TL_din(15 downto 16-OB_WIDTH),
-      data_b    => TL_din_int(15 downto 16-OB_WIDTH),
-      data_c    => (others => '0'),
-      wren_a    => TL_wren,
-      wren_b    => TL_wren_int,
-      wren_c    => '0',
-      q_a       => TL_dout(15 downto 16-OB_WIDTH),
-      q_b       => open,
-      q_c       => vga_TL_dout(15 downto 16-OB_WIDTH)
-      );
 
-  TR_BUFFER : entity work.triram160x128xN
-    generic map (N         => OB_WIDTH,
-                 SMALL_RAM => SMALL_RAM)
-    port map (
-      address_a => TR_addr,
-      address_b => TR_addr_int,
-      address_c => vga_addr,
-      clock     => clk,
-      data_a    => TR_din(15 downto 16-OB_WIDTH),
-      data_b    => TR_din_int(15 downto 16-OB_WIDTH),
-      data_c    => (others => '0'),
-      wren_a    => TR_wren,
-      wren_b    => TR_wren_int,
-      wren_c    => '0',
-      q_a       => TR_dout(15 downto 16-OB_WIDTH),
-      q_b       => open,
-      q_c       => vga_TR_dout(15 downto 16-OB_WIDTH)
-      );
-	end generate;
-	
-	GEN_NO_TOP : if SMALL_RAM = '1' generate
-		TL_dout(15 downto 16-OB_WIDTH) <= (others => '0');
-		vga_TL_dout(15 downto 16-OB_WIDTH) <= (others => '0');
-		TR_dout(15 downto 16-OB_WIDTH) <= (others => '0');
-		vga_TR_dout(15 downto 16-OB_WIDTH) <= (others => '0');
-	end generate;
+  GEN_TOP : if SMALL_RAM = '0' generate
+    TL_BUFFER : entity work.triram160x128xN
+      generic map (N         => OB_WIDTH,
+                   SMALL_RAM => SMALL_RAM)
+      port map (
+        address_a => TL_addr,
+        address_b => TL_addr_int,
+        address_c => vga_addr,
+        clock     => clk,
+        data_a    => TL_din(15 downto 16-OB_WIDTH),
+        data_b    => TL_din_int(15 downto 16-OB_WIDTH),
+        data_c    => (others => '0'),
+        wren_a    => TL_wren,
+        wren_b    => TL_wren_int,
+        wren_c    => '0',
+        q_a       => TL_dout(15 downto 16-OB_WIDTH),
+        q_b       => open,
+        q_c       => vga_TL_dout(15 downto 16-OB_WIDTH)
+        );
+
+    TR_BUFFER : entity work.triram160x128xN
+      generic map (N         => OB_WIDTH,
+                   SMALL_RAM => SMALL_RAM)
+      port map (
+        address_a => TR_addr,
+        address_b => TR_addr_int,
+        address_c => vga_addr,
+        clock     => clk,
+        data_a    => TR_din(15 downto 16-OB_WIDTH),
+        data_b    => TR_din_int(15 downto 16-OB_WIDTH),
+        data_c    => (others => '0'),
+        wren_a    => TR_wren,
+        wren_b    => TR_wren_int,
+        wren_c    => '0',
+        q_a       => TR_dout(15 downto 16-OB_WIDTH),
+        q_b       => open,
+        q_c       => vga_TR_dout(15 downto 16-OB_WIDTH)
+        );
+  end generate;
+
+  GEN_NO_TOP : if SMALL_RAM = '1' generate
+    TL_dout(15 downto 16-OB_WIDTH)     <= (others => '0');
+    vga_TL_dout(15 downto 16-OB_WIDTH) <= (others => '0');
+    TR_dout(15 downto 16-OB_WIDTH)     <= (others => '0');
+    vga_TR_dout(15 downto 16-OB_WIDTH) <= (others => '0');
+  end generate;
 
 
   BL_BUFFER : entity work.triram160x128xN
@@ -370,9 +372,10 @@ begin  -- rtl
       q_c       => vga_BR_dout(15 downto 16-OB_WIDTH)
       );
 
-  PROCESSOR_1 : entity work.ranger_process 
-    generic map ( ACC_WIDTH => 14,
-    SMALL_RAM => SMALL_RAM)
+  PROCESSOR_1 : entity work.ranger_process
+    generic map (ACC_WIDTH => 20,
+                 logN => 5,
+                 SMALL_RAM => SMALL_RAM)
     port map (
       clk                     => clk,
       reset_n                 => reset_n,
@@ -383,19 +386,18 @@ begin  -- rtl
       sine                    => sin_1(15 downto 0),
       cosine                  => cos_1(15 downto 0),
       frame_index             => frame_index,
-      --output_phase     => process_phase_1,
-      --output_mag       => process_mag_1,
-      --output_addr      => process_addr,
-      --output_valid     => process_valid,
-      --debug_data       => debug_data_1,
-      --debug_addr       => debug_addr,
-      --debug_valid      => debug_valid,
       output_data_1           => process_data_1,
       output_addr_1           => process_addr_1,
       output_valid_1          => process_valid_1,
       output_data_2           => process_data_2,
       output_addr_2           => process_addr_2,
       output_valid_2          => process_valid_2,
+      output_data_3           => process_data_3,
+      output_addr_3           => process_addr_3,
+      output_valid_3          => process_valid_3,
+      output_data_4           => process_data_4,
+      output_addr_4           => process_addr_4,
+      output_valid_4          => process_valid_4,
       frames_per_output_frame => frames_per_output_frame,
       pixel_scale             => pixel_scale,
       dc_offset               => dc_offset,
@@ -466,26 +468,25 @@ begin  -- rtl
   -- Hardware RAM writing.   
   -- TOP LEFT = RAW PIXEL A
   TL_addr_int <= raw_pixel_addr;
-  TL_din_int  <= frame_count(7 downto 0) & frame_count(15 downto 8) when raw_pixel_addr = "000000000000000"
-                 else frame_count(7 downto 0) & frame_count(15 downto 8) when (stall = '1' and raw_pixel_addr(14 downto 10) = "00000")
-                 else raw_pixel_data(15 downto 0);
-  TL_wren_int <= raw_pixel_valid;
+  TL_din_int  <= frame_count(7 downto 0) & frame_count(15 downto 8)
+                 when (stall = '1' and process_addr_1 = "00000")
+                 else process_data_1;
+  TL_wren_int <= process_valid_1;
 
   -- TOP RIGHT = RAW PIXEL B
-  TR_addr_int <= raw_pixel_addr;
-  TR_din_int  <= frame_count(7 downto 0) & frame_count(15 downto 8) when raw_pixel_addr = "000000000000000"
-                 else raw_pixel_data(31 downto 16);
-  TR_wren_int <= raw_pixel_valid;
+  TR_addr_int <= process_addr_2;
+  TR_din_int  <= process_data_2;
+  TR_wren_int <= process_valid_2;
 
   -- BOTTOM LEFT = DATA 1
-  BL_addr_int <= process_addr_1;
-  BL_din_int  <= process_data_1;
-  BL_wren_int <= process_valid_1;
+  BL_addr_int <= process_addr_3;
+  BL_din_int  <= process_data_3;
+  BL_wren_int <= process_valid_3;
 
   -- BOTTOM RIGHT = DATA 2
-  BR_addr_int <= process_addr_2;
-  BR_din_int  <= process_data_2;
-  BR_wren_int <= process_valid_2;
+  BR_addr_int <= process_addr_4;
+  BR_din_int  <= process_data_4;
+  BR_wren_int <= process_valid_4;
 
 
 

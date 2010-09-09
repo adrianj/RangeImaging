@@ -19,9 +19,9 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_unsigned.all;
 
 entity ranger_process is
-  generic (ACC_WIDTH : integer := 12;  -- default of 22 is for 16 bit inputs, and N=8.
-           logN      : integer := 3;
-		   SMALL_RAM : std_logic := '0');                     
+  generic (ACC_WIDTH : integer   := 12;  -- default of 22 is for 16 bit inputs, and N=8.
+           logN      : integer   := 3;
+           SMALL_RAM : std_logic := '0');                     
   port (
     clk         : in std_logic;
     reset_n     : in std_logic;
@@ -45,21 +45,27 @@ entity ranger_process is
     output_valid_2 : out std_logic                     := '0';
     output_data_2  : out std_logic_vector(15 downto 0) := (others => '0');
     output_addr_2  : out std_logic_vector(14 downto 0) := (others => '0');
+    output_valid_3 : out std_logic                     := '0';
+    output_data_3  : out std_logic_vector(15 downto 0) := (others => '0');
+    output_addr_3  : out std_logic_vector(14 downto 0) := (others => '0');
+    output_valid_4 : out std_logic                     := '0';
+    output_data_4  : out std_logic_vector(15 downto 0) := (others => '0');
+    output_addr_4  : out std_logic_vector(14 downto 0) := (others => '0');
     -- (7:4) for OB_2, (3:0) for OB_1.
     -- X"0" = Phase, X"1" = Mag, X"2" = Raw_a, X"3" = Raw_b.
-    output_select  : in  std_logic_vector(7 downto 0)  := X"01";
+    output_select  : in  std_logic_vector(15 downto 0) := X"2301";
 
     -- extra channel for outputting whatever I like.
     --debug_data  : out std_logic_vector(15 downto 0);
     --debug_addr  : out std_logic_vector(14 downto 0);
     --debug_valid : out std_logic;
     frames_per_output_frame : in std_logic_vector(15 downto 0);
-    sine                     : in std_logic_vector(15 downto 0);
-    cosine                   : in std_logic_vector(15 downto 0);
-    pixel_scale              : in std_logic_vector(3 downto 0);
-    dc_offset                : in std_logic_vector(15 downto 0);
-    saturation_level         : in std_logic_vector(15 downto 0);
-    phase_correction         : in std_logic_vector(15 downto 0)
+    sine                    : in std_logic_vector(15 downto 0);
+    cosine                  : in std_logic_vector(15 downto 0);
+    pixel_scale             : in std_logic_vector(3 downto 0);
+    dc_offset               : in std_logic_vector(15 downto 0);
+    saturation_level        : in std_logic_vector(15 downto 0);
+    phase_correction        : in std_logic_vector(15 downto 0)
     );
 
 end ranger_process;
@@ -106,8 +112,21 @@ architecture rtl of ranger_process is
 
   signal offset_result : std_logic_vector(15 downto 0) := (others => '0');
 
-  --signal mag_log_test : std_logic_vector(15 downto 0) := (others => '0');  
-  --signal atan_mag_test : std_logic_vector(15 downto 0) := (others => '0');
+
+  -- These signals are concatenations of (valid & addr & data)
+  signal output_1 : std_logic_vector(31 downto 0) := (others => '0');
+  signal output_2 : std_logic_vector(31 downto 0) := (others => '0');
+  signal output_3 : std_logic_vector(31 downto 0) := (others => '0');
+  signal output_4 : std_logic_vector(31 downto 0) := (others => '0');
+
+  signal phase_valid : std_logic                     := '0';
+  signal phase_out   : std_logic_vector(15 downto 0) := (others => '0');
+  signal mag_out     : std_logic_vector(15 downto 0) := (others => '0');
+  signal phase_addr  : std_logic_vector(14 downto 0) := (others => '0');
+  signal raw_valid   : std_logic                     := '0';
+  signal raw_a       : std_logic_vector(15 downto 0) := (others => '0');
+  signal raw_b       : std_logic_vector(15 downto 0) := (others => '0');
+  signal raw_addr    : std_logic_vector(14 downto 0) := (others => '0');
   
   
 begin  -- rtl    
@@ -222,40 +241,23 @@ begin  -- rtl
       --debug_addr     <= (others => '0');
       offset_result  <= (others => '0');
       -- Old Way
-      --output_phase <= (others => '0');
-      --output_mag   <= (others => '0');
-      --output_valid <= '0';
-      --output_addr  <= (others => '0');
-      output_addr_1  <= (others => '0');
-      output_data_1  <= (others => '0');
-      output_valid_1 <= '0';
-      output_addr_2  <= (others => '0');
-      output_data_2  <= (others => '0');
-      output_valid_2 <= '0';
+
+
+      raw_valid   <= '0';
+      raw_a       <= (others => '0');
+      raw_b       <= (others => '0');
+      raw_addr    <= (others => '0');
+      phase_out   <= (others => '0');
+      mag_out     <= (others => '0');
+      phase_valid <= '0';
+      phase_addr  <= (others => '0');
       
     elsif rising_edge(clk) then         -- rising clock edge
       -- clk cycle 0
-      
-      if output_select(7 downto 0) = X"2" then
-        output_addr_2  <= pixel_addr;
-        output_data_2  <= pixel_a;
-        output_valid_2 <= pixel_valid;
-      end if;
-      if output_select(3 downto 0) = X"2" then
-        output_addr_1  <= pixel_addr;
-        output_data_1  <= pixel_a;
-        output_valid_1 <= pixel_valid;
-      end if;
-      if output_select(7 downto 0) = X"3" then
-        output_addr_2  <= pixel_addr;
-        output_data_2  <= pixel_b;
-        output_valid_2 <= pixel_valid;
-      end if;
-      if output_select(3 downto 0) = X"3" then
-        output_addr_1  <= pixel_addr;
-        output_data_1  <= pixel_b;
-        output_valid_1 <= pixel_valid;
-      end if;
+      raw_valid <= pixel_valid;
+      raw_a     <= pixel_a;
+      raw_b     <= pixel_b;
+      raw_addr  <= pixel_addr;
 
 
       --if pixel_a < saturation_level or pixel_b < saturation_level then
@@ -300,44 +302,14 @@ begin  -- rtl
       end if;
       pixel_addr_3 <= pixel_addr_2;
 
-      --debug_data  <= pixel_real_old(W-1 downto W-B);
-      --debug_addr   <= pixel_addr_2;
-      --debug_valid  <= valid_2;
 
       -- clk cycle 4
-      -- acc values are available for atan.     
-      --debug_data  <= pixel_real_acc(W-1 downto W-4)&X"000";
-      --debug_addr  <= pixel_addr_3;
-      --debug_valid <= valid_3;
 
       -- clk cycle XXX (after atan)
-      --output_valid <= atan_valid;
-
-      -- This line, select either atan_mag  or  atan_mag_log.
-      --output_mag   <= atan_mag_log;
-      --output_addr  <= atan_addr;
-      --output_phase <= atan_phase + phase_correction;
-
-      if output_select(7 downto 0) = X"0" then
-        output_addr_2  <= atan_addr;
-        output_data_2  <= atan_phase + phase_correction;
-        output_valid_2 <= atan_valid;
-      end if;
-      if output_select(3 downto 0) = X"0" then
-        output_addr_1  <= atan_addr;
-        output_data_1  <= atan_phase + phase_correction;
-        output_valid_1 <= atan_valid;
-      end if;
-      if output_select(7 downto 0) = X"1" then
-        output_addr_2  <= atan_addr;
-        output_data_2  <= atan_mag_log;
-        output_valid_2 <= atan_valid;
-      end if;
-      if output_select(3 downto 0) = X"1" then
-        output_addr_1  <= atan_addr;
-        output_data_1  <= atan_mag_log;
-        output_valid_1 <= atan_valid;
-      end if;
+      phase_addr  <= atan_addr;
+      phase_valid <= atan_valid;
+      phase_out   <= atan_phase+phase_correction;
+      mag_out     <= atan_mag_log;
       
     end if;
   end process EVERYTHING;
@@ -347,13 +319,48 @@ begin  -- rtl
       linear_in => atan_mag,
       log_out   => atan_mag_log);
 
---      process(clk, reset_n)
---      begin
---              if reset_n = '0' then
---                      atan_mag_test <= (others => '0');
---              elsif rising_edge(clk) then
---                      atan_mag_test <= atan_mag_test + 1;
---              end if;
---      end process;
+
+  -- Set outputs
+  with output_select(3 downto 0) select
+    output_1 <=
+    raw_valid & raw_addr & raw_a         when X"2",
+    raw_valid & raw_addr & raw_b         when X"3",
+    phase_valid & phase_addr & phase_out when X"0",
+    phase_valid & phase_addr & phase_out when X"1",
+    (others => '0')                      when others;
+  with output_select(7 downto 4) select
+    output_2 <=
+    raw_valid & raw_addr & raw_a         when X"2",
+    raw_valid & raw_addr & raw_b         when X"3",
+    phase_valid & phase_addr & phase_out when X"0",
+    phase_valid & phase_addr & phase_out when X"1",
+    (others => '0')                      when others;
+  with output_select(11 downto 8) select
+    output_3 <=
+    raw_valid & raw_addr & raw_a         when X"2",
+    raw_valid & raw_addr & raw_b         when X"3",
+    phase_valid & phase_addr & phase_out when X"0",
+    phase_valid & phase_addr & phase_out when X"1",
+    (others => '0')                      when others;
+  with output_select(15 downto 12) select
+    output_4 <=
+    raw_valid & raw_addr & raw_a         when X"2",
+    raw_valid & raw_addr & raw_b         when X"3",
+    phase_valid & phase_addr & phase_out when X"0",
+    phase_valid & phase_addr & phase_out when X"1",
+    (others => '0')                      when others;
+  output_valid_1 <= output_1(31);
+  output_addr_1  <= output_1(30 downto 16);
+  output_data_1  <= output_1(15 downto 0);
+  output_valid_2 <= output_2(31);
+  output_addr_2  <= output_2(30 downto 16);
+  output_data_2  <= output_2(15 downto 0);
+  output_valid_3 <= output_3(31);
+  output_addr_3  <= output_3(30 downto 16);
+  output_data_3  <= output_3(15 downto 0);
+  output_valid_4 <= output_4(31);
+  output_addr_4  <= output_4(30 downto 16);
+  output_data_4  <= output_4(15 downto 0);
+  
 
 end rtl;
