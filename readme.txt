@@ -12,7 +12,6 @@ More to come later, including the java packet capturing application.
 
 
 
-
 Also - here are some reminders to myself about how to use Git:
 
 git add <file> : Adds files to repositories. Be careful when adding directories, since it adds all files in the directory. Better to go into the directory and add only files with matching patterns, eg, "git add *.vhd"
