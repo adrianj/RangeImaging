@@ -5,6 +5,7 @@ The goal for this Git repository is to host all of my code for the Victoria Univ
 VHDL code -  VHDL source code for FPGA projects.
 Altera - Altera Quartus projects and associated settings.
 Nios - Code specific to the Nios II microprocessor by Altera.
+Java - Java code, used for range imaging PC client.
 
 
 More to come later, including the java packet capturing application.
