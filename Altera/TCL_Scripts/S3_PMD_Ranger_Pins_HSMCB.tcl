@@ -100,7 +100,11 @@ set_location_assignment PIN_P10 -to "laser_mod_2(n)"
 set_location_assignment PIN_R12 -to spare_tx
 set_location_assignment PIN_T11 -to "spare_tx(n)"
 
-
+set_instance_assignment -name INPUT_TERMINATION DIFFERENTIAL -to ADC_d[7..0]
+set_instance_assignment -name INPUT_TERMINATION DIFFERENTIAL -to ADC_sdata_read
+set_instance_assignment -name INPUT_TERMINATION DIFFERENTIAL -to PMD_end_r
+set_instance_assignment -name INPUT_TERMINATION DIFFERENTIAL -to PMD_end_c
+set_instance_assignment -name INPUT_TERMINATION DIFFERENTIAL -to laser_rx
 
 
 

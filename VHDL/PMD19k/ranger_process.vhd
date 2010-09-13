@@ -128,6 +128,10 @@ architecture rtl of ranger_process is
   signal raw_b       : std_logic_vector(15 downto 0) := (others => '0');
   signal raw_addr    : std_logic_vector(14 downto 0) := (others => '0');
   
+  signal subtract_valid : std_logic := '0';
+  signal subtract_data : std_logic_vector(15 downto 0) := (others => '0');
+  signal subtract_addr : std_logic_vector(14 downto 0) := (others => '0');
+  
   
 begin  -- rtl    
   
@@ -165,7 +169,7 @@ begin  -- rtl
       storage_in  => atan_storage_in,
       storage_out => atan_storage_out);   
 
-  atan_nd <= valid_3 when frame_index = frames_per_output_frame else '0';
+  atan_nd <= valid_3 when frame_index = (frames_per_output_frame-1) else '0';
 
   RAM_ACC_REAL : entity work.dualram160x128xN
     generic map (N         => W,
@@ -252,6 +256,10 @@ begin  -- rtl
       phase_valid <= '0';
       phase_addr  <= (others => '0');
       
+      subtract_valid <= '0';
+      subtract_data <= (others => '0');
+      subtract_addr <= (others => '0');
+      
     elsif rising_edge(clk) then         -- rising clock edge
       -- clk cycle 0
       raw_valid <= pixel_valid;
@@ -280,6 +288,10 @@ begin  -- rtl
       valid_1      <= valid_0;
       pixel_addr_1 <= pixel_addr_0;
       sat2         <= sat1;
+      
+      subtract_valid <= valid_0;
+      subtract_addr <= pixel_addr_0;
+      subtract_data <= offset_result;
 
       -- clk cycle 2
       -- Multiplication happening in seperate process
@@ -300,8 +312,8 @@ begin  -- rtl
         pixel_real_acc <= pixel_real_old + pixel_real_scaled;
         pixel_imag_acc <= pixel_imag_old + pixel_imag_scaled;
       end if;
-      pixel_addr_3 <= pixel_addr_2;
-
+      pixel_addr_3 <= pixel_addr_2;		
+	 
 
       -- clk cycle 4
 
@@ -326,28 +338,32 @@ begin  -- rtl
     raw_valid & raw_addr & raw_a         when X"2",
     raw_valid & raw_addr & raw_b         when X"3",
     phase_valid & phase_addr & phase_out when X"0",
-    phase_valid & phase_addr & phase_out when X"1",
+    phase_valid & phase_addr & mag_out when X"1",
+    subtract_valid & subtract_addr & subtract_data when X"4",
     (others => '0')                      when others;
   with output_select(7 downto 4) select
     output_2 <=
     raw_valid & raw_addr & raw_a         when X"2",
     raw_valid & raw_addr & raw_b         when X"3",
     phase_valid & phase_addr & phase_out when X"0",
-    phase_valid & phase_addr & phase_out when X"1",
+    phase_valid & phase_addr & mag_out when X"1",
+    subtract_valid & subtract_addr & subtract_data when X"4",
     (others => '0')                      when others;
   with output_select(11 downto 8) select
     output_3 <=
     raw_valid & raw_addr & raw_a         when X"2",
     raw_valid & raw_addr & raw_b         when X"3",
     phase_valid & phase_addr & phase_out when X"0",
-    phase_valid & phase_addr & phase_out when X"1",
+    phase_valid & phase_addr & mag_out when X"1",
+    subtract_valid & subtract_addr & subtract_data when X"4",
     (others => '0')                      when others;
   with output_select(15 downto 12) select
     output_4 <=
     raw_valid & raw_addr & raw_a         when X"2",
     raw_valid & raw_addr & raw_b         when X"3",
     phase_valid & phase_addr & phase_out when X"0",
-    phase_valid & phase_addr & phase_out when X"1",
+    phase_valid & phase_addr & mag_out when X"1",
+    subtract_valid & subtract_addr & subtract_data when X"4",
     (others => '0')                      when others;
   output_valid_1 <= output_1(31);
   output_addr_1  <= output_1(30 downto 16);

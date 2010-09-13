@@ -220,7 +220,7 @@ begin  -- rtl
       laser_mod_out_1    => laser_mod_out_1,
       laser_mod_out_2    => laser_mod_out_2);
 
-  MODULATION_SOURCE_1 : entity work.mod_homodyne_s3
+  MODULATION_SOURCE_1 : entity work.mod_homodyne_c3
     generic map (IS_CYCLONE3 => IS_CYCLONE3,
                  M_DEFAULT   => X"3C",
                  C_DEFAULT   => X"0F")
@@ -397,7 +397,8 @@ begin  -- rtl
       output_valid_3          => process_valid_3,
       output_data_4           => process_data_4,
       output_addr_4           => process_addr_4,
-      output_valid_4          => process_valid_4,
+      output_valid_4          => process_valid_4,	 
+	  output_select => process_output_select,
       frames_per_output_frame => frames_per_output_frame,
       pixel_scale             => pixel_scale,
       dc_offset               => dc_offset,

@@ -114,7 +114,7 @@ architecture rtl of PMD19k_registers is
   constant PHASE_CORRECTION_1_ADDR    : std_logic_vector(15 downto 0) := X"000D";
   signal   phase_correction_2_int     : std_logic_vector(15 downto 0) := X"C6C8";
   constant PHASE_CORRECTION_2_ADDR    : std_logic_vector(15 downto 0) := X"000E";
-  signal   process_output_select_int  : std_logic_vector(15 downto 0) := X"2301";
+  signal   process_output_select_int  : std_logic_vector(15 downto 0) := X"4301";
   constant PROCESS_OUTPUT_SELECT_ADDR : std_logic_vector(15 downto 0) := X"000F";
 
   constant FPB_1_ADDR        : std_logic_vector(15 downto 0) := X"0010";
@@ -190,7 +190,7 @@ begin  -- rtl
       adc_we                           <= '0';
       pixel_scale_int                  <= (others => '0');
       process_select_int               <= '0';
-      process_output_select_int        <= X"2301";
+      process_output_select_int        <= X"4301";
       laser_control_int                <= "11";     -- default both on
       dc_offset_int                    <= (others => '0');
       phase_correction_1_int           <= X"15A0";
