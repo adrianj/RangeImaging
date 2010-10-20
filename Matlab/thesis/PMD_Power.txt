@@ -1,0 +1,22 @@
+Using a Topward Dual-Tracking DC Power Supply 6303D.
+
+Development Kit powered using 16 V DC.
+Illumination Board powered using 10 V DC.
+
+First set of data is for frame rate of 100 Hz.
+
+freq = [0    1.25 4    8    12   16   20   24   28   32   36   40   44   48   52   56   60   64   68   72   76   80]
+p_il = [0.02 1.28 1.28 1.29 1.30 1.30 1.31 1.32 1.33 1.33 1.34 1.35 1.36 1.37 1.38 1.40 1.41 1.41 1.42 1.42 1.43 1.42]
+p_dk = [0.87 0.87 0.91 0.95 0.99 1.03 1.06 1.11 1.16 1.21 1.23 1.24 1.25 1.26 1.26 1.26 1.26 1.25 1.22 1.18 1.15 1.13]
+
+pm_fa =  [9.2 9.24 9.25 9.3 9.3 9.25 9.2  8.55  7.88 6.3 4.6 3.35 2.5 1.88  1.54 1.35]    %x200 mV
+id_fa =  [5 4.95  5.18 5.32 5.76 6.18 6.47  6.5  6.38 5.92 5.55 5.06 4.63 4.38  4.17 3.95]   %x200 uV
+
+At frame rate of 10 Hz, power consumption (current) for dk is higher - relatively more time integrating/modulating
+
+freq = [0    1.2  4    8    12   16   20   24   28   32   36   40   44   48   52   56   60   64   68   72   76   80]
+p_dk = [0.87 0.87 0.91 0.96 1.02 1.07 1.12 1.18 1.25 1.30 1.32 1.33 1.34 1.35 1.35 1.35 1.35 1.32 1.27 1.22 1.18 1.15]
+
+Other assorted equipment:
+Tektronix DPO 4054 Digital Phosphor Oscilloscope.
+Thorlabs DET10A/M Si Based Photodiode.
