@@ -3,27 +3,24 @@
 
 %clear all;
 clear all;
-avi_folder = 'D:/AVIs/test/modFreq_vs_DC/';
-%avi_folder = 'D:/ham_oct08/moving/';
-%avi_folder = 'D:/ham_oct08/disambig/';
-%avi_folder = 'D:/sync/PhD/';
+avi_folder = 'D:/Phd_Data/';
 
 figure;
 
 %colour = [0:1/255:1]';
 cmap = colormap(hsv(256));
 
-taps = 2;
-fps = 10;
-rshape = 0;
+taps = 1;
+fps = 1000/60;
 
-width = 160*taps;
+width = 160;
 height = 120;
 
-inFile = [avi_folder 'test_0.dat'];
-outFile = [avi_folder 'test_0.avi'];
+inFile = [avi_folder 'videoRate/24_24_3_3_60/0_0_0.dat'];
+outFile = [avi_folder 'videoRate_rng.avi'];
 
 flip_vertical = 0;
+rshape = 0; % set to 1 to rotate 90 degrees.
 
 ppf = width*height;
 
@@ -50,18 +47,9 @@ for frame = 1:Nframes
         break;
     end
     temp = c;
-    
-    
-    if taps == 2
-        tap1 = temp(1:2:end);
-        tap2 = temp(2:2:end);
-        tap1_r = reshape(tap1, width/2, height)';
-        tap2_r = reshape(tap2, width/2, height)';
-        my_image = [tap1_r tap2_r];
-    else
-        my_image = reshape(c, width, height)';
-    end
-    
+
+    my_image = reshape(c, width, height)';
+
     if rshape == 1
         my_image = reshape(my_image', height, width);
     end

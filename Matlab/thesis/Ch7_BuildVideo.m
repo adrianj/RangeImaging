@@ -19,6 +19,9 @@ setFilePath = sprintf('%s%s/%d_%d_%d_%d_%d/%d_%d_%d',avi_folder, setFileName, f,
 
 matFile = [setFilePath '_raw'];
 
+rngAVI = [avi_folder setFileName '_rng.avi'];
+ampAVI = [avi_folder setFileName '_amp.avi'];
+
 load(matFile);
 
 
@@ -107,12 +110,31 @@ print('-dtiff','-r200',[outpath 'colorbar']);
 PrettifyFigure(20,13,1,0);
 
 tp = zeros(tp_w*tp_w,proc_count);
+% Write AVI
+avi_r = avifile(rngAVI);
+avi_r = set(avi_r, 'fps', 1000/T/N);
+avi_r = set(avi_r, 'Colormap', jet(256));
+avi_r = set(avi_r, 'Compression', 'None');
+avi_a = avifile(ampAVI);
+avi_a = set(avi_a, 'fps', 1000/T/N);
+avi_a = set(avi_a, 'Colormap', gray(256));
+avi_a = set(avi_a, 'Compression', 'None');
+
+mn = min(min(d));
+mx = max(max(d))-mn;
+
 
 for i = 1:proc_count
 d = reshape(distance(:,i),width,height)';
+avi_r = addframe(avi_r, d/5/256);
+a = reshape(amp(:,i),width,height)';
+avi_a = addframe(avi_a, a/max(max(a))/256);
 t = d(tp_s1(1):tp_s1(1)-1+tp_w,tp_s1(2):tp_s1(2)-1+tp_w);
 tp(:,i) = t(:);
 end
+
+avi_r = close(avi_r);
+avi_a = close(avi_a);
 figure;plot(tp');
 sd = std(tp,0,2)*1000;
 me = mean(tp,2)*1000;
@@ -127,6 +149,7 @@ d = reshape(distance(:,i),width,height)';
 t = d(tp_s2(1):tp_s2(1)-1+tp_w,tp_s2(2):tp_s2(2)-1+tp_w);
 tp(:,i-tp_start+1) = t(:);
 end
+
 figure;plot(tp');
 sd = std(tp,0,2)*1000;
 me = mean(tp,2)*1000;
@@ -135,17 +158,3 @@ fprintf('Mean Sdev for Target 2: %3.3f mm +- %3.3f (~%3.2f%%)\n',mean(sd), std(s
 
 
 return;
-reb_w = 30;
-reb_h = 100;
-reb_s = [20 160-reb_w];
-rebecca = zeros(reb_h,reb_w,proc_count);
-
-for i = 1:proc_count
-d = reshape(distance(:,i),width,height)';
-rebecca(:,:,i) = d(reb_s(1):reb_s(1)-1+reb_h,reb_s(2):reb_s(2)-1+reb_w);
-end
-rebecca(rebecca>1)=0;
-PrettifyFigure(9,27,1,0);
-imagesc(mod(mean(rebecca,3),1));
-
-surf(-mean(rebecca,3));
